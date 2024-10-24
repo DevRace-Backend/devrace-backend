@@ -5,17 +5,33 @@ import java.util.Map;
 public abstract class OAuth2UserInfo {
 
     protected Map<String, Object> attributes;
+    private String registrationId;
+    private ProviderType providerType;
 
-    public OAuth2UserInfo(Map<String, Object> attributes) {
+    public OAuth2UserInfo(Map<String, Object> attributes, String registrationId, ProviderType providerType) {
         this.attributes = attributes;
+        this.registrationId = registrationId;
+        this.providerType = providerType;
     }
 
-    public abstract String getId(); // 프로바이더 식별자
+    public Map<String, Object> getAttributes() { return attributes; }
 
-    public abstract String getName(); // 닉네임
+    public String getRegistrationId() {
+        return registrationId;
+    }
 
-    public abstract String getEmail(); // 이메일
+    public ProviderType getProviderType() { return providerType; }
 
-    public abstract String getImageUrl(); // 프로파일 이미지
+    public abstract String getProviderId();
+
+    public abstract String getName();
+
+    public abstract String getEmail();
+
+    public abstract String getImageUrl();
+
+    public boolean isGithub() {
+        return false;
+    }
 
 }

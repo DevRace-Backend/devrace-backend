@@ -4,12 +4,12 @@ import java.util.Map;
 
 public class GithubOAuth2UserInfo extends OAuth2UserInfo {
 
-    public GithubOAuth2UserInfo(Map<String, Object> attributes) {
-        super(attributes);
+    public GithubOAuth2UserInfo(Map<String, Object> attributes, String registrationId, ProviderType providerType) {
+        super(attributes, registrationId, providerType);
     }
 
     @Override
-    public String getId() {
+    public String getProviderId() {
         return String.valueOf(attributes.get("id"));
     }
 
@@ -26,5 +26,10 @@ public class GithubOAuth2UserInfo extends OAuth2UserInfo {
     @Override
     public String getImageUrl() {
         return String.valueOf(attributes.get("avatar_url"));
+    }
+
+    @Override
+    public boolean isGithub() {
+        return true;
     }
 }

@@ -4,12 +4,12 @@ import java.util.Map;
 
 public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
 
-    public GoogleOAuth2UserInfo(Map<String, Object> attributes) {
-        super(attributes);
+    public GoogleOAuth2UserInfo(Map<String, Object> attributes, String registrationId, ProviderType providerType) {
+        super(attributes, registrationId, providerType);
     }
 
     @Override
-    public String getId() {
+    public String getProviderId() {
         return String.valueOf(attributes.get("sub"));
     }
 

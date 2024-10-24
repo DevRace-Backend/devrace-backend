@@ -1,6 +1,7 @@
 package com.devrace.global.config.oauth.service;
 
-import com.devrace.global.config.oauth.provider.OAuth2Provider;
+import com.devrace.global.config.oauth.PrincipalUser;
+import com.devrace.global.config.oauth.provider.ProviderType;
 import com.devrace.global.config.oauth.provider.OAuth2UserInfo;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -18,7 +19,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
         ClientRegistration clientRegistration = userRequest.getClientRegistration();
 
-        OAuth2UserInfo oAuth2UserInfo = OAuth2Provider.getUserInfo(clientRegistration.getRegistrationId(), oAuth2User.getAttributes());
-        return null;
+        OAuth2UserInfo userInfo = ProviderType.getUserInfo(clientRegistration.getRegistrationId(), oAuth2User.getAttributes());
+        return new PrincipalUser(userInfo);
     }
 }
