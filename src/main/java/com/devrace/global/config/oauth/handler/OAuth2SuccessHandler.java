@@ -11,7 +11,7 @@ import com.devrace.domain.user.service.UserService;
 import com.devrace.global.config.oauth.PrincipalUser;
 import com.devrace.global.config.oauth.provider.OAuth2UserInfo;
 import com.devrace.global.config.oauth.repository.CookieOAuth2AuthorizationRequestRepository;
-import com.devrace.global.jwt.JwtTokenProvider;
+import com.devrace.global.config.jwt.JwtTokenProvider;
 import com.devrace.global.util.CookieUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +41,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         User user = getUser(userInfo);
 
-        String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getRole());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getRole().getAuthority());
         String refreshToken = jwtTokenProvider.createRefreshToken();
         addTokens(response, accessToken, refreshToken);
 

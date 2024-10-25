@@ -1,6 +1,6 @@
-package com.devrace.global.jwt;
+package com.devrace.global.config.jwt;
 
-import com.devrace.domain.user.enums.UserRole;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -32,13 +32,13 @@ public class JwtTokenProvider {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String createAccessToken(Long userId, UserRole role) {
+    public String createAccessToken(Long userId, String authority) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + ACCESS_TOKEN_DURATION.toMillis());
 
         return AUTHORIZATION_TYPE + Jwts.builder()
                 .setSubject(userId.toString())
-                .claim(AUTHORITIES_KEY, role)
+                .claim(AUTHORITIES_KEY, authority)
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(key)
@@ -57,9 +57,31 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public String substringToken(String authorizationHeaderValue) {
+        if (authorizationHeaderValue.startsWith(AUTHORIZATION_TYPE)) {
+            return authorizationHeaderValue.replace(AUTHORIZATION_TYPE, "");
+        }
+        return null;
+    }
+
     public boolean isValidToken(String jwtToken) {
         Jwts.parser().setSigningKey(secret).parseClaimsJws(jwtToken);
         return true;
+    }
+
+    public String getSubject(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    public String getAuthority(String token) {
+        return getClaims(token).get(AUTHORITIES_KEY, String.class);
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody();
     }
 
 }
