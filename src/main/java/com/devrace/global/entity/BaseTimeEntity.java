@@ -1,26 +1,31 @@
 package com.devrace.global.entity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import lombok.Getter;
 
 @Getter
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseTimeEntity {
 
     @Column(updatable = false)
-    @CreatedDate
     private ZonedDateTime createdAt;
 
     @Column
-    @LastModifiedDate
     private ZonedDateTime modifiedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = ZonedDateTime.now(ZoneOffset.UTC);
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.modifiedAt = ZonedDateTime.now(ZoneOffset.UTC);
+    }
 
 }

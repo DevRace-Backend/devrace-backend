@@ -12,15 +12,17 @@ public enum ErrorCode {
     DATETIME_PARSE_ERROR(400, "만료 시간 파싱 실패"),
     NUMBER_FORMAT_ERROR(400, "Error parsing, Too long"),
     ILLEGAL_ARGUMENT_ERROR(400, "잘못된 파라미터 전달"),
+    INVALID_PROVIDER_ERROR(400, "지원하지 않는 소셜 로그인 시도"),
+    EXPIRED_TOKEN(400, "만료된 토큰입니다."),
 
     /*  401 UNAUTHORIZED : 인증 안됨  */
-
+    UNAUTHORIZED(401, "인증되지 않았습니다."),
 
     /*  403 FORBIDDEN : 권한 없음  */
     DENIED_AUTHORITY(403, "권한이 없습니다."),
 
     /*  404 NOT_FOUND : Resource 권한 없음, Resource 를 찾을 수 없음  */
-    ACCESS_DENIED(404,"접근 권한이 없습니다."),
+    ACCESS_DENIED(404, "접근 권한이 없습니다."),
     NOT_FOUND_FLASH_ERROR(404, "존재하지 않는 FLASH 입니다."),
     NOT_FOUND_USER_ERROR(404, "존재하지 않는 USER 입니다."),
     NOT_FOUND_COMMENT_ERROR(404, "존재하지 않는 COMMENT 입니다."),
