@@ -1,5 +1,6 @@
 package com.devrace.global.config;
 
+import com.devrace.global.config.oauth.repository.CookieOAuth2AuthorizationRequestRepository;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ public class SecurityConfig {
 
     private final OAuth2UserService oAuth2UserService;
     private final SimpleUrlAuthenticationSuccessHandler successHandler;
+    private final CookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,6 +39,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
 
                 .oauth2Login(oauth2 -> oauth2
+                        .authorizationEndpoint(authEndpoint -> authEndpoint.authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository))
                         .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(oAuth2UserService))
                         .successHandler(successHandler)
                 )
