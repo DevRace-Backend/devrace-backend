@@ -1,5 +1,6 @@
 package com.devrace.domain.log.service;
 
+import com.devrace.domain.log.controller.dto.EditLogDto;
 import com.devrace.domain.log.controller.dto.SubmitLogDto;
 import com.devrace.domain.log.entity.Log;
 import com.devrace.domain.log.repository.LogRepository;
@@ -37,9 +38,30 @@ public class LogService {
         return logRepository.save(log);
     }
 
+    public Log editLog(Long logId, EditLogDto editLogDto, Long userId) {
+        Log log = checkLog(logId, userId);
+
+        log = Log.builder()
+                .address(editLogDto.getAddress())
+                .title(editLogDto.getTitle())
+                .content(editLogDto.getContent())
+                .isPublic(log.isPublic())
+                .createdAt(log.getCreatedAt())
+                .userId(userId)
+                .build();
+
+        return logRepository.save(log);
+    }
+
     private User checkUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException((ErrorCode.USER_NOT_FOUND)));
+    }
+
+    private Log checkLog(Long logId, Long userId) {
+
+        return logRepository.findByIdAndUserId(logId, userId)
+                .orElseThrow(() -> new CustomException((ErrorCode.LOG_NOT_FOUND)));
     }
 
     public boolean isDuplicatedLink(String address, Long userId) {
