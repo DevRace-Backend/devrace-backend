@@ -6,8 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,18 +38,17 @@ public class Log {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Builder
-    public Log (String address, String title, String content, boolean isPublic, LocalDateTime createdAt, User user) {
+    public Log (String address, String title, String content, boolean isPublic, LocalDateTime createdAt, Long userId) {
         this.address = address;
         this.title = title;
         this.content = content;
         this.isPublic = isPublic;
         this.createdAt = createdAt;
-        this.user = user;
+        this.userId = userId;
     }
 
 }

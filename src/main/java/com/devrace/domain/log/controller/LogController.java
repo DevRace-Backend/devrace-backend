@@ -28,10 +28,10 @@ public class LogController {
 
     @PostMapping
     public ResponseEntity<SubmitLogResponseDto> submitLog(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal Long userId,
             @RequestBody SubmitLogDto submitLogDto) {
 
-        if (logService.isDuplicatedLink(submitLogDto.getAddress(), user.getId())) {
+        if (logService.isDuplicatedLink(submitLogDto.getAddress(), userId)) {
             SubmitLogResponseDto errorResponse = SubmitLogResponseDto.builder()
                     .status("error")
                     .message(ErrorCode.DUPLICATED_LINK.getMessage())
@@ -41,16 +41,7 @@ public class LogController {
                     .body(errorResponse);
         }
 
-        Log log = Log.builder()
-                .address(submitLogDto.getAddress())
-                .title(submitLogDto.getTitle())
-                .content(submitLogDto.getContent())
-                .isPublic(true) // 나중에 변경
-                .createdAt(LocalDateTime.now())
-                .user(user)
-                .build();
-
-        Log submitLog = logService.submitLog(log);
+        Log submitLog = logService.submitLog(submitLogDto, userId);
 
         SubmitLogResponseDto successResponse = SubmitLogResponseDto.builder()
                 .status("성공")
