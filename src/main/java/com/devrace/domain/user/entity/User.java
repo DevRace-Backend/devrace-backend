@@ -54,8 +54,6 @@ public class User extends BaseTimeEntity {
     @Column
     private ZonedDateTime deletedAt;
 
-
-
     public static User create(OAuth2UserInfo userInfo, String uniqueNickname) {
         return User.builder()
                 .nickname(uniqueNickname)
