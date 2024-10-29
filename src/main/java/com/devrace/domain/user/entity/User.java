@@ -59,14 +59,15 @@ public class User extends BaseTimeEntity {
                 uniqueNickname,
                 userInfo.getEmail(),
                 userInfo.getImageUrl(),
-                userInfo.isGithub() ? userInfo.getName() : null);
+                userInfo.isGithub(),
+                userInfo.getName());
     }
 
-    public User(String nickname, String primaryEmail, String imageUrl, String githubName) {
+    public User(String nickname, String primaryEmail, String imageUrl, boolean isGithub, String githubName) {
         this.nickname = nickname;
         this.role = UserRole.USER;
         this.primaryEmail = primaryEmail;
         this.imageUrl = imageUrl;
-        this.githubName = githubName;
+        this.githubName = isGithub ? githubName : null;
     }
 }

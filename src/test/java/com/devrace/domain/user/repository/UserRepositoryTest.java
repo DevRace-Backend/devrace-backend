@@ -40,6 +40,6 @@ class UserRepositoryTest {
     }
 
     private User createUser(String nickname, String email) {
-        return new User(nickname, email, null, "tester");
+        return new User(nickname, email, null, true, "tester");
     }
 }
