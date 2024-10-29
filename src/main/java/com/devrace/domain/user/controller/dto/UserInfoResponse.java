@@ -24,7 +24,7 @@ public class UserInfoResponse {
                 user.getGithubName());
     }
 
-    private UserInfoResponse(String nickname, String description, String blogAddress, String githubAddress) {
+    public UserInfoResponse(String nickname, String description, String blogAddress, String githubAddress) {
         this.nickname = nickname;
         this.description = description;
         this.blogAddress = blogAddress;

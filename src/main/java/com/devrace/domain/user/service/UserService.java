@@ -2,6 +2,7 @@ package com.devrace.domain.user.service;
 
 import static com.devrace.global.exception.ErrorCode.USER_NOT_FOUND;
 
+import com.devrace.domain.user.controller.dto.MyInfoResponse;
 import com.devrace.domain.user.controller.dto.UserInfoResponse;
 import com.devrace.domain.user.entity.User;
 import com.devrace.domain.user.generator.NicknameGenerator;
@@ -29,10 +30,15 @@ public class UserService {
         return userRepository.findByPrimaryEmail(email);
     }
 
+    public MyInfoResponse getMyInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        return MyInfoResponse.from(user);
+    }
+
     public UserInfoResponse getUserInfo(String nickname) {
         User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-
         return UserInfoResponse.from(user);
     }
 
