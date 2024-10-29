@@ -7,10 +7,10 @@ import lombok.Getter;
 public class CustomException extends RuntimeException {
 
     private final ErrorCode errorCode;
-    private final String msg;
+    private final String message;
 
     public CustomException(ErrorCode errorCode) {
         this.errorCode = errorCode;
-        this.msg = errorCode.getMessage();
+        this.message = errorCode.getMessage();
     }
 }

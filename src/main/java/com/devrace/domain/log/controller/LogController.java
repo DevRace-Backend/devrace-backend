@@ -6,7 +6,6 @@ import com.devrace.domain.log.controller.dto.SubmitLogDto;
 import com.devrace.domain.log.controller.dto.SubmitLogResponseDto;
 import com.devrace.domain.log.entity.Log;
 import com.devrace.domain.log.service.LogService;
-import com.devrace.domain.user.entity.User;
 import com.devrace.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,13 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-
-import static org.springframework.http.ResponseEntity.ok;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/log")
+@RequestMapping("/api/v1/log")
 public class LogController {
 
     private final LogService logService;
