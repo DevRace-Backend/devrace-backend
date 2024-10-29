@@ -2,6 +2,7 @@ package com.devrace.domain.log.controller;
 
 import com.devrace.domain.log.controller.dto.EditLogDto;
 import com.devrace.domain.log.controller.dto.EditLogResponseDto;
+import com.devrace.domain.log.controller.dto.LogResponseDto;
 import com.devrace.domain.log.controller.dto.SubmitLogDto;
 import com.devrace.domain.log.controller.dto.SubmitLogResponseDto;
 import com.devrace.domain.log.entity.Log;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -88,5 +90,14 @@ public class LogController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(successResponse);
 
+    }
+
+    @GetMapping("/{logId}")
+    public ResponseEntity<LogResponseDto> getLog(
+            @PathVariable Long logId
+    ){
+        Log log = logService.getLogById(logId);
+        LogResponseDto responseDto = logService.createLogResponse(log);
+        return ResponseEntity.ok(responseDto);
     }
 }
