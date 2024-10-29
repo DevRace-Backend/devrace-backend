@@ -1,6 +1,7 @@
 package com.devrace.domain.log.service;
 
 import com.devrace.domain.log.controller.dto.EditLogDto;
+import com.devrace.domain.log.controller.dto.LogResponseDto;
 import com.devrace.domain.log.controller.dto.SubmitLogDto;
 import com.devrace.domain.log.entity.Log;
 import com.devrace.domain.log.repository.LogRepository;
@@ -38,6 +39,7 @@ public class LogService {
         return logRepository.save(log);
     }
 
+    @Transactional
     public Log editLog(Long logId, EditLogDto editLogDto, Long userId) {
         Log log = checkLog(logId, userId);
 
@@ -51,6 +53,18 @@ public class LogService {
                 .build();
 
         return logRepository.save(log);
+    }
+
+    public Log getLogById(Long logId) {
+        return logRepository.findById(logId)
+                .orElseThrow(() -> new CustomException((ErrorCode.LOG_NOT_FOUND)));
+    }
+    public LogResponseDto createLogResponse(Log log) {
+        return LogResponseDto.builder()
+                .logId(log.getId())
+                .address(log.getAddress())
+                .createdAt(log.getCreatedAt())
+                .build();
     }
 
     private User checkUser(Long userId) {
