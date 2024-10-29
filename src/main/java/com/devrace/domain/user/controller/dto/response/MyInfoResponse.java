@@ -1,4 +1,4 @@
-package com.devrace.domain.user.controller.dto;
+package com.devrace.domain.user.controller.dto.response;
 
 import com.devrace.domain.user.entity.User;
 import lombok.Getter;

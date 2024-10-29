@@ -63,6 +63,10 @@ public class User extends BaseTimeEntity {
                 userInfo.getName());
     }
 
+    public void changeNickname(String newNickname) {
+        this.nickname = newNickname;
+    }
+
     public User(String nickname, String primaryEmail, String imageUrl, boolean isGithub, String githubName) {
         this.nickname = nickname;
         this.role = UserRole.USER;

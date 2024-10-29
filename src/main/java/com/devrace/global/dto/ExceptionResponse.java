@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 public class ExceptionResponse<T> {
 
     private final Integer status;
-    private final String msg;
+    private final String message;
     private final T data;
 
-    public static <T> ExceptionResponse<T> of(Integer status, String msg, T data) {
-        return new ExceptionResponse<>(status, msg, data);
+    public static <T> ExceptionResponse<T> of(Integer status, String message, T data) {
+        return new ExceptionResponse<>(status, message, data);
     }
 }
