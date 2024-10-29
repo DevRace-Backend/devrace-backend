@@ -7,7 +7,6 @@ import com.devrace.domain.log.controller.dto.SubmitLogDto;
 import com.devrace.domain.log.controller.dto.SubmitLogResponseDto;
 import com.devrace.domain.log.entity.Log;
 import com.devrace.domain.log.service.LogService;
-import com.devrace.domain.user.entity.User;
 import com.devrace.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,13 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-
-import static org.springframework.http.ResponseEntity.ok;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/log")
+@RequestMapping("/api/v1/log")
 public class LogController {
 
     private final LogService logService;
@@ -66,7 +61,7 @@ public class LogController {
             @PathVariable Long logId,
             @AuthenticationPrincipal Long userId,
             @RequestBody EditLogDto editLogDto
-            ){
+    ) {
 
         if (logService.isDuplicatedLink(editLogDto.getAddress(), userId)) {
             EditLogResponseDto errorResponse = EditLogResponseDto.builder()
@@ -95,7 +90,7 @@ public class LogController {
     @GetMapping("/{logId}")
     public ResponseEntity<LogResponseDto> getLog(
             @PathVariable Long logId
-    ){
+    ) {
         Log log = logService.getLogById(logId);
         LogResponseDto responseDto = logService.createLogResponse(log);
         return ResponseEntity.ok(responseDto);
