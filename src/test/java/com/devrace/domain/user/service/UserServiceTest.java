@@ -9,15 +9,16 @@ import com.devrace.domain.user.entity.User;
 import com.devrace.domain.user.repository.UserRepository;
 import com.devrace.global.exception.CustomException;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@ActiveProfiles("test")
+@Transactional
 @SpringBootTest
+@ActiveProfiles("test")
 class UserServiceTest {
 
     @Autowired
@@ -25,11 +26,6 @@ class UserServiceTest {
 
     @Autowired
     private UserService userService;
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAllInBatch();
-    }
 
     @Test
     @DisplayName("getUserInfo(닉네임): 닉네임을 받아 사용자를 조회한다.")
@@ -46,7 +42,7 @@ class UserServiceTest {
         UserInfoResponse userInfo = userService.getUserInfo(nickname1);
 
         // then
-        assertThat(userInfo.getNickname()).isEqualTo(nickname1);
+        assertThat(userInfo.getNickname()).isEqualTo(user1.getNickname());
     }
 
     @Test
@@ -54,12 +50,10 @@ class UserServiceTest {
     void getUserInfo_letter_case_fail() {
         // given
         final String nickname = "Hut234";
+        final String different_letter_case = "hut234";
 
         User user = createUser(nickname);
-
         userRepository.save(user);
-
-        final String different_letter_case = "hut234";
 
         // expected
         assertThatThrownBy(() -> userService.getUserInfo(different_letter_case))
