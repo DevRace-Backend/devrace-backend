@@ -12,7 +12,7 @@ import lombok.Getter;
 @MappedSuperclass
 public abstract class BaseTimeEntity {
 
-    @Column(updatable = false)
+    @Column(nullable = false, updatable = false)
     private ZonedDateTime createdAt;
 
     @Column

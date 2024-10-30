@@ -26,14 +26,14 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 63, nullable = false)
+    @Column(length = 21, nullable = false, unique = true)
     private String nickname;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Column(length = 600)
+    @Column(length = 200)
     private String description;
 
     @Column
@@ -48,7 +48,7 @@ public class User extends BaseTimeEntity {
     @Column
     private String blogAddress;
 
-    @Column
+    @Column(nullable = false)
     private boolean isDeleted;
 
     @Column
