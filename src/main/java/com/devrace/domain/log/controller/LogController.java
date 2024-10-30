@@ -61,7 +61,7 @@ public class LogController {
             @PathVariable Long logId,
             @AuthenticationPrincipal Long userId,
             @RequestBody EditLogDto editLogDto
-            ){
+    ) {
 
         if (logService.isDuplicatedLink(editLogDto.getAddress(), userId)) {
             EditLogResponseDto errorResponse = EditLogResponseDto.builder()
@@ -90,7 +90,7 @@ public class LogController {
     @GetMapping("/{logId}")
     public ResponseEntity<LogResponseDto> getLog(
             @PathVariable Long logId
-    ){
+    ) {
         Log log = logService.getLogById(logId);
         LogResponseDto responseDto = logService.createLogResponse(log);
         return ResponseEntity.ok(responseDto);

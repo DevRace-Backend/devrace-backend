@@ -10,6 +10,7 @@ public enum ErrorCode {
 
     /*  400 BAD_REQUEST : 잘못된 요청  */
     DUPLICATED_LINK(400, "중복된 링크입니다."),
+    INVALID_LINK(400, "잘못된 링크입니다."),
     NUMBER_FORMAT_ERROR(400, "Error parsing, Too long"),
     ILLEGAL_ARGUMENT_ERROR(400, "잘못된 파라미터 전달"),
     INVALID_PROVIDER_ERROR(400, "지원하지 않는 소셜 로그인 시도"),
@@ -25,6 +26,8 @@ public enum ErrorCode {
     ACCESS_DENIED(404, "접근 권한이 없습니다."),
     USER_NOT_FOUND(404, "유저를 찾을 수 없습니다."),
     LOG_NOT_FOUND(404, "로그를 찾을 수 없습니다."),
+    SOLUTION_NOT_FOUND(404, "제출된 알고리즘 풀이를 찾을 수 없습니다."),
+    PROBLEM_NOT_FOUND(404, "알고리즘 문제를 찾을 수 없습니다."),
 
     /*  408 REQUEST_TIMEOUT : 요청에 대한 응답 시간 초과  */
     TIMEOUT_ERROR(408, "응답시간을 초과하였습니다."),
