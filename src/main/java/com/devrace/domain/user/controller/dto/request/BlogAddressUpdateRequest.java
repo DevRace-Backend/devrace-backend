@@ -12,8 +12,9 @@ import org.springframework.util.StringUtils;
 @NoArgsConstructor
 public class BlogAddressUpdateRequest {
 
+    private static final String BLOG_ADDRESS_PREFIX = "https://";
+
     public static final String MESSAGE = "블로그 주소는 https://를 포함한 최소 8글자 이상으로 입력해 주세요.";
-    public static final String BLOG_ADDRESS_PREFIX = "https://";
 
     @Schema(description = "변경할 블로그 주소", example = "https://velog.io/@Example")
     private String blogAddress;

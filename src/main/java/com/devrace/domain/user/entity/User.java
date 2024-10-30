@@ -36,13 +36,13 @@ public class User extends BaseTimeEntity {
     @Column(length = 200)
     private String description;
 
-    @Column
+    @Column(unique = true)
     private String primaryEmail;
 
     @Column
     private String imageUrl;
 
-    @Column
+    @Column(unique = true)
     private String githubName;
 
     @Column
