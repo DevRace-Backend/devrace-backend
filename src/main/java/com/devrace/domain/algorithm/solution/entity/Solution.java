@@ -55,4 +55,11 @@ public class Solution {
         this.nickName = nickName;
         this.problemId = problemId;
     }
+
+    public void update(String description, String review, Long problemId, boolean isPublic) {
+        this.description = description;
+        this.review = review;
+        this.problemId = problemId;
+        this.isPublic = isPublic;
+    }
 }

@@ -26,6 +26,7 @@ public enum ErrorCode {
     ACCESS_DENIED(404, "접근 권한이 없습니다."),
     USER_NOT_FOUND(404, "유저를 찾을 수 없습니다."),
     LOG_NOT_FOUND(404, "로그를 찾을 수 없습니다."),
+    SOLUTION_NOT_FOUND(404, "제출된 알고리즘 풀이를 찾을 수 없습니다."),
     PROBLEM_NOT_FOUND(404, "알고리즘 문제를 찾을 수 없습니다."),
 
     /*  408 REQUEST_TIMEOUT : 요청에 대한 응답 시간 초과  */
