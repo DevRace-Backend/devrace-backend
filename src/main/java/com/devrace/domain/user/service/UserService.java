@@ -2,6 +2,7 @@ package com.devrace.domain.user.service;
 
 import static com.devrace.global.exception.ErrorCode.USER_NOT_FOUND;
 
+import com.devrace.domain.user.controller.dto.request.DescriptionUpdateRequest;
 import com.devrace.domain.user.controller.dto.request.NicknameUpdateRequest;
 import com.devrace.domain.user.controller.dto.response.MyInfoResponse;
 import com.devrace.domain.user.controller.dto.response.UserInfoResponse;
@@ -48,6 +49,12 @@ public class UserService {
     public void updateNickname(Long userId, NicknameUpdateRequest request) {
         User user = getUserById(userId);
         user.changeNickname(getUniqueNickname(request.getNickname()));
+    }
+
+    @Transactional
+    public void updateDescription(Long userId, DescriptionUpdateRequest request) {
+        User user = getUserById(userId);
+        user.changeDescription(request.getDescription());
     }
 
     @Transactional(readOnly = true)

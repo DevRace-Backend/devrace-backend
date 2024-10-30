@@ -4,6 +4,7 @@ import static com.devrace.global.exception.ErrorCode.USER_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.devrace.domain.user.controller.dto.request.DescriptionUpdateRequest;
 import com.devrace.domain.user.controller.dto.request.NicknameUpdateRequest;
 import com.devrace.domain.user.controller.dto.response.MyInfoResponse;
 import com.devrace.domain.user.controller.dto.response.UserInfoResponse;
@@ -102,7 +103,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("updateNickname(유저PK, 변경할 닉네임): ")
+    @DisplayName("updateNickname(유저PK, 변경할 닉네임): 변경할 닉네임을 입력받아 사용자 닉네임을 변경한다.")
     void updateNickname_success() {
         // given
         User user = createUser("Hut234");
@@ -117,6 +118,24 @@ class UserServiceTest {
 
         // then
         assertThat(request.getNickname()).isEqualTo(savedUser.getNickname());
+    }
+
+    @Test
+    @DisplayName("updateDescription(유저PK, 변경할 자기소개): 변경할 자기소개를 입력받아 사용자 자기소개를 변경한다.")
+    void updateDescription_success() {
+        // given
+        User user = createUser("Hut234");
+        User savedUser = userRepository.save(user);
+
+        final Long userId = savedUser.getId();
+        final String newDescription = "NewDescription";
+        final DescriptionUpdateRequest request = new DescriptionUpdateRequest(newDescription);
+
+        // when
+        userService.updateDescription(userId, request);
+
+        // then
+        assertThat(request.getDescription()).isEqualTo(savedUser.getDescription());
     }
 
     private User createUser(String nickname) {

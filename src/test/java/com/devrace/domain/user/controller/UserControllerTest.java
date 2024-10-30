@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.devrace.domain.user.controller.dto.request.DescriptionUpdateRequest;
 import com.devrace.domain.user.controller.dto.request.NicknameUpdateRequest;
 import com.devrace.domain.user.controller.dto.response.UserInfoResponse;
 import com.devrace.domain.user.service.UserService;
@@ -79,7 +80,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("updateNickname(사용자PK, 변경할 닉네임): 변경할 닉네임을 받아 사용자 닉네임을 변경한다.")
+    @DisplayName("updateNickname(사용자PK, 변경할 닉네임): 변경할 닉네임을 입력받아 사용자 닉네임을 변경한다.")
     void updateNickname_success() throws Exception {
         // given
         final String uri = "/api/v1/users/me/nickname";
@@ -95,6 +96,7 @@ class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
     @Test
     @DisplayName("updateNickname(사용자PK, 변경할 닉네임): 변경할 닉네임이 null 이면 실패한다.")
     void updateNickname_nickname_null_validation() throws Exception {
@@ -135,6 +137,26 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("updateNickname(사용자PK, 변경할 닉네임): 변경할 닉네임이 공백이면 실패한다.")
+    void updateNickname_nickname_min_validation2() throws Exception {
+        // given
+        final String uri = "/api/v1/users/me/nickname";
+
+        final String newNickname = "   ";
+        final NicknameUpdateRequest request = new NicknameUpdateRequest(newNickname);
+        final String requestBody = objectMapper.writeValueAsString(request);
+
+        // expected
+        mockMvc.perform(patch(uri).with(csrf())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.ILLEGAL_ARGUMENT_ERROR.getMessage()))
+                .andExpect(jsonPath("$.data[0].message").value(NicknameUpdateRequest.MESSAGE));
+    }
+
+    @Test
     @DisplayName("updateNickname(사용자PK, 변경할 닉네임): 변경할 닉네임이 21자 초과하면 실패한다.")
     void updateNickname_nickname_max_validation() throws Exception {
         // given
@@ -152,5 +174,106 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(ErrorCode.ILLEGAL_ARGUMENT_ERROR.getMessage()))
                 .andExpect(jsonPath("$.data[0].message").value(NicknameUpdateRequest.MESSAGE));
+    }
+
+    @Test
+    @DisplayName("updateDescription(사용자PK, 변경할 자기소개): 변경할 자기소개를 입력받아 사용자 자기소개를 변경한다.")
+    void updateDescription_success() throws Exception {
+        // given
+        final String uri = "/api/v1/users/me/description";
+
+        final String newDescription = "NewDescription";
+        final DescriptionUpdateRequest request = new DescriptionUpdateRequest(newDescription);
+        final String requestBody = objectMapper.writeValueAsString(request);
+
+        // expected
+        mockMvc.perform(patch(uri).with(csrf())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("updateDescription(사용자PK, 변경할 자기소개): 변경할 자기소개가 null 이면 실패한다.")
+    void updateDescription_description_null_validation() throws Exception {
+        // given
+        final String uri = "/api/v1/users/me/description";
+
+        final DescriptionUpdateRequest request = new DescriptionUpdateRequest(null);
+        final String requestBody = objectMapper.writeValueAsString(request);
+
+        // expected
+        mockMvc.perform(patch(uri).with(csrf())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.ILLEGAL_ARGUMENT_ERROR.getMessage()))
+                .andExpect(jsonPath("$.data[0].message").value(DescriptionUpdateRequest.MESSAGE));
+    }
+
+    @Test
+    @DisplayName("updateDescription(사용자PK, 변경할 자기소개): 변경할 자기소개가 1자 미만이면 실패한다.")
+    void updateDescription_description_min_validation() throws Exception {
+        // given
+        final String uri = "/api/v1/users/me/description";
+
+        final String newDescription = "";
+        final DescriptionUpdateRequest request = new DescriptionUpdateRequest(newDescription);
+        final String requestBody = objectMapper.writeValueAsString(request);
+
+        // expected
+        mockMvc.perform(patch(uri).with(csrf())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.ILLEGAL_ARGUMENT_ERROR.getMessage()))
+                .andExpect(jsonPath("$.data[0].message").value(DescriptionUpdateRequest.MESSAGE));
+    }
+
+    @Test
+    @DisplayName("updateDescription(사용자PK, 변경할 자기소개): 변경할 자기소개가 공백이면 실패한다.")
+    void updateDescription_description_min_validation2() throws Exception {
+        // given
+        final String uri = "/api/v1/users/me/description";
+
+        final String newDescription = "   ";
+        final DescriptionUpdateRequest request = new DescriptionUpdateRequest(newDescription);
+        final String requestBody = objectMapper.writeValueAsString(request);
+
+        // expected
+        mockMvc.perform(patch(uri).with(csrf())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.ILLEGAL_ARGUMENT_ERROR.getMessage()))
+                .andExpect(jsonPath("$.data[0].message").value(DescriptionUpdateRequest.MESSAGE));
+    }
+
+    @Test
+    @DisplayName("updateDescription(사용자PK, 변경할 자기소개): 변경할 자기소개가 200자 초과하면 실패한다.")
+    void updateDescription_description_max_validation() throws Exception {
+        // given
+        final String uri = "/api/v1/users/me/description";
+
+        final String newDescription = "가"
+                + "가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차"
+                + "가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차"
+                + "가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차"
+                + "가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차가나다라마바사아자차";
+        final DescriptionUpdateRequest request = new DescriptionUpdateRequest(newDescription);
+        final String requestBody = objectMapper.writeValueAsString(request);
+
+        // expected
+        mockMvc.perform(patch(uri).with(csrf())
+                        .contentType(APPLICATION_JSON_VALUE)
+                        .content(requestBody))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorCode.ILLEGAL_ARGUMENT_ERROR.getMessage()))
+                .andExpect(jsonPath("$.data[0].message").value(DescriptionUpdateRequest.MESSAGE));
     }
 }
