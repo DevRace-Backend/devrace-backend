@@ -47,8 +47,13 @@ public class AlgorithmController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-//    @GetMapping("/{solutionId}")
-//    public ResponseEntity<AlgorithmResponseDto> getAlgorithm(@PathVariable Long solutionId) {
-//
-//    }
+    @GetMapping("/{solutionId}")
+    public ResponseEntity<AlgorithmResponseDto> getAlgorithm(
+            @PathVariable Long solutionId,
+            @AuthenticationPrincipal Long userId) {
+
+        AlgorithmResponseDto responseDto = algorithmService.getAlgorithm(solutionId, userId);
+
+        return ResponseEntity.ok(responseDto);
+    }
 }

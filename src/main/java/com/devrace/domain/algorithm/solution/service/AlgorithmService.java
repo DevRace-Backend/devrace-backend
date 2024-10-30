@@ -2,6 +2,7 @@ package com.devrace.domain.algorithm.solution.service;
 
 import com.devrace.domain.algorithm.problem.entity.Problem;
 import com.devrace.domain.algorithm.problem.repository.ProblemRepository;
+import com.devrace.domain.algorithm.solution.controller.dto.AlgorithmResponseDto;
 import com.devrace.domain.algorithm.solution.controller.dto.EditAlgorithmDto;
 import com.devrace.domain.algorithm.solution.controller.dto.EditAlgorithmResponseDto;
 import com.devrace.domain.algorithm.solution.controller.dto.SubmitAlgorithmDto;
@@ -89,6 +90,25 @@ public class AlgorithmService {
                 .build();
     }
 
+    public AlgorithmResponseDto getAlgorithm(Long solutionId, Long userId) {
+        Solution solution = checkSolution(solutionId, userId);
+        User user = checkUser(userId);
+        Problem problem = problemRepository.findById(solution.getProblemId())
+                .orElseThrow(() -> new CustomException(ErrorCode.PROBLEM_NOT_FOUND));
+
+        return AlgorithmResponseDto.builder()
+                .solutionId(solutionId)
+                .title(problem.getTitle())
+                .createdAt(solution.getCreatedAt())
+                .description(solution.getDescription())
+                .review(solution.getReview())
+                .isPublic(solution.isPublic())
+                .nickName(user.getNickname())
+                .imageUrl(user.getImageUrl())
+//                .levelBadgeImageUrl(user.getUserLevel().getLevelBadgeImageUrl())
+                .build();
+    }
+
     private Long saveProblem(SubmitAlgorithmDto submitAlgorithmDto) {
         return problemRepository.findByAddressAndTitle(
                         submitAlgorithmDto.getAddress(),
@@ -97,6 +117,7 @@ public class AlgorithmService {
                         new Problem(submitAlgorithmDto.getAddress(), submitAlgorithmDto.getTitle())
                 )).getId();
     }
+
     private Long saveProblemEdit(EditAlgorithmDto editAlgorithmDto) {
         return problemRepository.findByAddressAndTitle(
                         editAlgorithmDto.getAddress(),
@@ -121,6 +142,6 @@ public class AlgorithmService {
 
     private Solution checkSolution(Long solutionId, Long userId) {
         return algorithmRepository.findByIdAndUserId(solutionId, userId)
-                .orElseThrow(() -> new CustomException((ErrorCode.LOG_NOT_FOUND)));
+                .orElseThrow(() -> new CustomException((ErrorCode.SOLUTION_NOT_FOUND)));
     }
 }
