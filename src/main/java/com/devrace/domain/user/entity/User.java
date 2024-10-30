@@ -36,13 +36,13 @@ public class User extends BaseTimeEntity {
     @Column(length = 200)
     private String description;
 
-    @Column
+    @Column(unique = true)
     private String primaryEmail;
 
     @Column
     private String imageUrl;
 
-    @Column
+    @Column(unique = true)
     private String githubName;
 
     @Column
@@ -69,6 +69,10 @@ public class User extends BaseTimeEntity {
 
     public void changeDescription(String description) {
         this.description = description;
+    }
+
+    public void changeBlogAddress(String blogAddress) {
+        this.blogAddress = blogAddress;
     }
 
     public User(String nickname, String primaryEmail, String imageUrl, boolean isGithub, String githubName) {

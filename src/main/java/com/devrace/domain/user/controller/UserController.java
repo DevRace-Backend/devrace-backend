@@ -1,5 +1,6 @@
 package com.devrace.domain.user.controller;
 
+import com.devrace.domain.user.controller.dto.request.BlogAddressUpdateRequest;
 import com.devrace.domain.user.controller.dto.request.DescriptionUpdateRequest;
 import com.devrace.domain.user.controller.dto.request.NicknameUpdateRequest;
 import com.devrace.domain.user.controller.dto.response.MyInfoResponse;
@@ -45,6 +46,12 @@ public class UserController {
     @PatchMapping("/me/description")
     public ResponseEntity<Void> updateDescription(@AuthenticationPrincipal Long userId, @Valid @RequestBody DescriptionUpdateRequest request) {
         userService.updateDescription(userId, request);
+        return ResponseEntity.ok(null);
+    }
+
+    @PatchMapping("/me/blog-address")
+    public ResponseEntity<Void> updateBlogAddress(@AuthenticationPrincipal Long userId, @RequestBody BlogAddressUpdateRequest request) {
+        userService.updateBlogAddress(userId, request);
         return ResponseEntity.ok(null);
     }
 }
