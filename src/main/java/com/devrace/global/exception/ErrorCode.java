@@ -1,6 +1,7 @@
 package com.devrace.global.exception;
 
 
+import com.devrace.domain.user.controller.dto.request.BlogAddressUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,6 +15,7 @@ public enum ErrorCode {
     ILLEGAL_ARGUMENT_ERROR(400, "잘못된 파라미터 전달"),
     INVALID_PROVIDER_ERROR(400, "지원하지 않는 소셜 로그인 시도"),
     EXPIRED_TOKEN(400, "만료된 토큰입니다."),
+    INVALID_BLOG_ADDRESS(400, BlogAddressUpdateRequest.MESSAGE),
 
     /*  401 UNAUTHORIZED : 인증 안됨  */
     UNAUTHORIZED(401, "인증되지 않았습니다."),

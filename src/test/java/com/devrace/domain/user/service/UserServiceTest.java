@@ -4,6 +4,7 @@ import static com.devrace.global.exception.ErrorCode.USER_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.devrace.domain.user.controller.dto.request.BlogAddressUpdateRequest;
 import com.devrace.domain.user.controller.dto.request.DescriptionUpdateRequest;
 import com.devrace.domain.user.controller.dto.request.NicknameUpdateRequest;
 import com.devrace.domain.user.controller.dto.response.MyInfoResponse;
@@ -137,6 +138,25 @@ class UserServiceTest {
         // then
         assertThat(request.getDescription()).isEqualTo(savedUser.getDescription());
     }
+
+    @Test
+    @DisplayName("updateBlogAddress(유저PK, 변경할 블로그 주소): 변경할 블로그 주소를 입력받아 사용자 블로그 주소를 변경한다.")
+    void updateBlogAddress_success() {
+        // given
+        User user = createUser("Hut234");
+        User savedUser = userRepository.save(user);
+
+        final Long userId = savedUser.getId();
+        final String newBlogAddress = "https://NewBlogAddress";
+        final BlogAddressUpdateRequest request = new BlogAddressUpdateRequest(newBlogAddress);
+
+        // when
+        userService.updateBlogAddress(userId, request);
+
+        // then
+        assertThat(request.getBlogAddress()).isEqualTo(savedUser.getBlogAddress());
+    }
+
 
     private User createUser(String nickname) {
         return new User(nickname, "test@gmail.com", "http://imageUrl.com", true, "tester");
