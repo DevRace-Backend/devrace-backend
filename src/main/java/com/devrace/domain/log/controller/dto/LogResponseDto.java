@@ -12,5 +12,5 @@ public class LogResponseDto {
     private final Long logId;
     private final String address;
     private final ZonedDateTime createdAt;
-
+    private final boolean isPublic;
 }

@@ -62,6 +62,7 @@ public class LogService {
                 .logId(log.getId())
                 .address(log.getAddress())
                 .createdAt(log.getCreatedAt())
+                .isPublic(log.isPublic())
                 .build();
     }
 
