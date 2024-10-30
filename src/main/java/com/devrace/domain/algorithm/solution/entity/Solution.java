@@ -1,5 +1,6 @@
 package com.devrace.domain.algorithm.solution.entity;
 
+import com.devrace.global.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Solution {
+public class Solution extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,11 +28,6 @@ public class Solution {
 
     @Column(length = 300)
     private String review;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    private LocalDateTime modifiedAt;
 
     @Column(nullable = false)
     private boolean isPublic;
@@ -46,10 +42,9 @@ public class Solution {
     private Long problemId;
 
     @Builder
-    public Solution(String description, String review, LocalDateTime createdAt, boolean isPublic, Long userId, String nickName, Long problemId) {
+    public Solution(String description, String review, boolean isPublic, Long userId, String nickName, Long problemId) {
         this.description = description;
         this.review = review;
-        this.createdAt = createdAt;
         this.isPublic = isPublic;
         this.userId = userId;
         this.nickName = nickName;
