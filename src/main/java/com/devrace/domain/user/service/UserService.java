@@ -2,8 +2,9 @@ package com.devrace.domain.user.service;
 
 import static com.devrace.global.exception.ErrorCode.USER_NOT_FOUND;
 
-import com.devrace.domain.user.controller.dto.MyInfoResponse;
-import com.devrace.domain.user.controller.dto.UserInfoResponse;
+import com.devrace.domain.user.controller.dto.request.NicknameUpdateRequest;
+import com.devrace.domain.user.controller.dto.response.MyInfoResponse;
+import com.devrace.domain.user.controller.dto.response.UserInfoResponse;
 import com.devrace.domain.user.entity.User;
 import com.devrace.domain.user.generator.NicknameGenerator;
 import com.devrace.domain.user.repository.UserRepository;
@@ -26,13 +27,14 @@ public class UserService {
         return userRepository.save(User.create(userInfo, uniqueNickname));
     }
 
+    @Transactional(readOnly = true)
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByPrimaryEmail(email);
     }
 
+    @Transactional(readOnly = true)
     public MyInfoResponse getMyInfo(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        User user = getUserById(userId);
         return MyInfoResponse.from(user);
     }
 
@@ -42,10 +44,23 @@ public class UserService {
         return UserInfoResponse.from(user);
     }
 
+    @Transactional
+    public void updateNickname(Long userId, NicknameUpdateRequest request) {
+        User user = getUserById(userId);
+        user.changeNickname(getUniqueNickname(request.getNickname()));
+    }
+
+    @Transactional(readOnly = true)
     private String getUniqueNickname(String nickname) {
         while (userRepository.existsByNickname(nickname)) {
             nickname = NicknameGenerator.generateRandomNickname();
         }
         return nickname;
+    }
+
+    @Transactional(readOnly = true)
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 }

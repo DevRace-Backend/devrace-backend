@@ -4,8 +4,9 @@ import static com.devrace.global.exception.ErrorCode.USER_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.devrace.domain.user.controller.dto.MyInfoResponse;
-import com.devrace.domain.user.controller.dto.UserInfoResponse;
+import com.devrace.domain.user.controller.dto.request.NicknameUpdateRequest;
+import com.devrace.domain.user.controller.dto.response.MyInfoResponse;
+import com.devrace.domain.user.controller.dto.response.UserInfoResponse;
 import com.devrace.domain.user.entity.User;
 import com.devrace.domain.user.repository.UserRepository;
 import com.devrace.global.exception.CustomException;
@@ -98,6 +99,24 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.getUserInfo(different_letter_case))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("updateNickname(유저PK, 변경할 닉네임): ")
+    void updateNickname_success() {
+        // given
+        User user = createUser("Hut234");
+        User savedUser = userRepository.save(user);
+
+        final Long userId = savedUser.getId();
+        final String newNickname = "NewNickname";
+        final NicknameUpdateRequest request = new NicknameUpdateRequest(newNickname);
+
+        // when
+        userService.updateNickname(userId, request);
+
+        // then
+        assertThat(request.getNickname()).isEqualTo(savedUser.getNickname());
     }
 
     private User createUser(String nickname) {
