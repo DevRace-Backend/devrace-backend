@@ -32,7 +32,6 @@ public class LogService {
                 .title(submitLogDto.getTitle())
                 .content(submitLogDto.getContent())
                 .isPublic(true) // 나중에 변경
-                .createdAt(LocalDateTime.now())
                 .userId(user.getId())
                 .build();
 
@@ -48,7 +47,6 @@ public class LogService {
                 .title(editLogDto.getTitle())
                 .content(editLogDto.getContent())
                 .isPublic(log.isPublic())
-                .createdAt(log.getCreatedAt())
                 .userId(userId)
                 .build();
 

@@ -1,6 +1,7 @@
 package com.devrace.domain.log.entity;
 
 import com.devrace.domain.user.entity.User;
+import com.devrace.global.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Log {
+public class Log extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,19 +36,15 @@ public class Log {
     @Column(nullable = false)
     private boolean isPublic;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
     @Builder
-    public Log (String address, String title, String content, boolean isPublic, LocalDateTime createdAt, Long userId) {
+    public Log (String address, String title, String content, boolean isPublic, Long userId) {
         this.address = address;
         this.title = title;
         this.content = content;
         this.isPublic = isPublic;
-        this.createdAt = createdAt;
         this.userId = userId;
     }
 

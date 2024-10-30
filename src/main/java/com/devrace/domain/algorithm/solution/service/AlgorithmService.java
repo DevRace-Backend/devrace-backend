@@ -43,7 +43,6 @@ public class AlgorithmService {
         Solution solution = Solution.builder()
                 .description(submitAlgorithmDto.getDescription())
                 .review(submitAlgorithmDto.getReview())
-                .createdAt(LocalDateTime.now())
                 .isPublic(submitAlgorithmDto.isPublic())
                 .userId(userId)
                 .nickName(user.getNickname())
