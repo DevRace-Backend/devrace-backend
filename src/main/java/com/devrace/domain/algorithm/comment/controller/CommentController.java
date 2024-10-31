@@ -3,6 +3,7 @@ package com.devrace.domain.algorithm.comment.controller;
 import com.devrace.domain.algorithm.comment.controller.dto.CreateCommentDto;
 import com.devrace.domain.algorithm.comment.controller.dto.CreateCommentResponseDto;
 import com.devrace.domain.algorithm.comment.controller.dto.EditCommentDto;
+import com.devrace.domain.algorithm.comment.controller.dto.EditCommentResponseDto;
 import com.devrace.domain.algorithm.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,12 +34,14 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-//    @PatchMapping("/{commentId}")
-//    public ResponseEntity<editCommentResponseDto> editComment(
-//            @PathVariable Long commentId,
-//            @AuthenticationPrincipal Long userId,
-//            @RequestBody EditCommentDto editCommentDto
-//    ) {
-//
-//    }
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<EditCommentResponseDto> editComment(
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal Long userId,
+            @RequestBody EditCommentDto editCommentDto
+    ) {
+        EditCommentResponseDto responseDto = commentService.editComment(commentId, userId, editCommentDto);
+
+        return ResponseEntity.ok(responseDto);
+    }
 }

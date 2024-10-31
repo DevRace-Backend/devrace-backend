@@ -38,5 +38,7 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "solution_id", nullable = false)
     private Solution solution;
 
-
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }

@@ -2,6 +2,8 @@ package com.devrace.domain.algorithm.comment.service;
 
 import com.devrace.domain.algorithm.comment.controller.dto.CreateCommentDto;
 import com.devrace.domain.algorithm.comment.controller.dto.CreateCommentResponseDto;
+import com.devrace.domain.algorithm.comment.controller.dto.EditCommentDto;
+import com.devrace.domain.algorithm.comment.controller.dto.EditCommentResponseDto;
 import com.devrace.domain.algorithm.comment.entity.Comment;
 import com.devrace.domain.algorithm.comment.repository.CommentRepository;
 import com.devrace.domain.algorithm.problem.repository.ProblemRepository;
@@ -45,14 +47,43 @@ public class CommentService {
                 .build();
     }
 
+    @Transactional
+    public EditCommentResponseDto editComment(Long commentId, Long userId, EditCommentDto editCommentDto) {
+        Comment comment = checkComment(commentId);
+
+        validateUser(userId, comment);
+
+        comment.updateContent(editCommentDto.getContent());
+
+        commentRepository.save(comment);
+
+        return EditCommentResponseDto.builder()
+                .id(commentId)
+                .nickName(comment.getUser().getNickname())
+                .content(comment.getContent())
+                .build();
+    }
+
+    private static void validateUser(Long userId, Comment comment) {
+        if (!comment.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+    }
+
     private User checkUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException((ErrorCode.USER_NOT_FOUND)));
     }
 
-
     private Solution checkSolution(Long solutionId, Long userId) {
         return algorithmRepository.findByIdAndUserId(solutionId, userId)
                 .orElseThrow(() -> new CustomException((ErrorCode.SOLUTION_NOT_FOUND)));
     }
+
+    private Comment checkComment(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
+    }
+    
+    
 }
