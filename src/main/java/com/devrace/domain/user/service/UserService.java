@@ -40,6 +40,7 @@ public class UserService {
         return MyInfoResponse.from(user);
     }
 
+    @Transactional(readOnly = true)
     public UserInfoResponse getUserInfo(String nickname) {
         User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
