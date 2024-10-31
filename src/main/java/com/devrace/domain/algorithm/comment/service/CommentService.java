@@ -1,5 +1,6 @@
 package com.devrace.domain.algorithm.comment.service;
 
+import com.devrace.domain.algorithm.comment.controller.dto.CommentResponseDto;
 import com.devrace.domain.algorithm.comment.controller.dto.CreateCommentDto;
 import com.devrace.domain.algorithm.comment.controller.dto.CreateCommentResponseDto;
 import com.devrace.domain.algorithm.comment.controller.dto.EditCommentDto;
@@ -15,7 +16,10 @@ import com.devrace.global.exception.CustomException;
 import com.devrace.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +28,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final AlgorithmRepository algorithmRepository;
-    private final ProblemRepository problemRepository;
 
     @Transactional
     public CreateCommentResponseDto createComment(Long solutionId, Long userId, CreateCommentDto createCommentDto) {
@@ -71,6 +74,26 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
+    @Transactional
+    public List<CommentResponseDto> getCommentList(Long solutionId) {
+        List<Comment> commentList = commentRepository.findBySolutionIdOrderByCreatedAtDesc(solutionId);
+
+        commentList.forEach(comment ->
+                Hibernate.initialize(comment.getUser()));
+
+        return commentList.stream()
+                .map(comment -> CommentResponseDto.builder()
+                        .id(comment.getId())
+                        .nickName(comment.getUser().getNickname())
+                        .profileImage(comment.getUser().getImageUrl())
+/**                        .levelImage() */
+                        .content(comment.getContent())
+                        .createdAt(comment.getCreatedAt())
+                        .build())
+                .limit(10)
+                .toList();
+    }
+
     private static void validateUser(Long userId, Comment comment) {
         if (!comment.getUser().getId().equals(userId)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
@@ -91,5 +114,4 @@ public class CommentService {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
     }
-
 }
