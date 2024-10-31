@@ -1,5 +1,6 @@
 package com.devrace.domain.user.service;
 
+import static com.devrace.global.exception.ErrorCode.ALREADY_EXIST_NICKNAME;
 import static com.devrace.global.exception.ErrorCode.USER_NOT_FOUND;
 
 import com.devrace.domain.user.controller.dto.request.BlogAddressUpdateRequest;
@@ -50,7 +51,12 @@ public class UserService {
     @Transactional
     public void updateNickname(Long userId, NicknameUpdateRequest request) {
         User user = getUserById(userId);
-        user.changeNickname(getUniqueNickname(request.getNickname()));
+
+        if (isNotUniqueNickname(request.getNickname())) {
+            throw new CustomException(ALREADY_EXIST_NICKNAME);
+        }
+
+        user.changeNickname(request.getNickname());
     }
 
     @Transactional
@@ -65,12 +71,16 @@ public class UserService {
         user.changeBlogAddress(request.getBlogAddress());
     }
 
-    @Transactional(readOnly = true)
     private String getUniqueNickname(String nickname) {
-        while (userRepository.existsByNickname(nickname)) {
+        while (isNotUniqueNickname(nickname)) {
             nickname = NicknameGenerator.generateRandomNickname();
         }
         return nickname;
+    }
+
+    @Transactional(readOnly = true)
+    private boolean isNotUniqueNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
     }
 
     @Transactional(readOnly = true)
