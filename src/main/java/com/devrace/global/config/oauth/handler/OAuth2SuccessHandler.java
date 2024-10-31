@@ -2,7 +2,7 @@ package com.devrace.global.config.oauth.handler;
 
 import static com.devrace.global.config.oauth.repository.CookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_COOKIE_NAME;
 
-import com.devrace.domain.core.service.UserSocialAccountService;
+import com.devrace.domain.core.service.UserSocialCategoryService;
 import com.devrace.domain.user.entity.User;
 import com.devrace.global.config.jwt.JwtTokenProvider;
 import com.devrace.global.config.oauth.PrincipalUser;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final UserSocialAccountService userSocialAccountService;
+    private final UserSocialCategoryService userSocialCategoryService;
     private final JwtTokenProvider jwtTokenProvider;
     private final CookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository;
 
@@ -31,7 +31,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         OAuth2UserInfo userInfo = principalUser.getUserInfo();
-        User user = userSocialAccountService.getUser(userInfo);
+        User user = userSocialCategoryService.getUser(userInfo);
 
         String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getRole().getAuthority());
         String refreshToken = jwtTokenProvider.createRefreshToken();
