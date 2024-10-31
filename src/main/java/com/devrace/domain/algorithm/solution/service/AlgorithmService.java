@@ -14,6 +14,7 @@ import com.devrace.domain.user.entity.User;
 import com.devrace.domain.user.repository.UserRepository;
 import com.devrace.global.exception.CustomException;
 import com.devrace.global.exception.ErrorCode;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,7 @@ public class AlgorithmService {
             "https://leetcode.com"
     );
 
+    @Transactional
     public SubmitAlgorithmResponseDto submitAlgorithm(Long userId, SubmitAlgorithmDto submitAlgorithmDto) {
         validateAddress(submitAlgorithmDto.getAddress());
 
@@ -64,6 +66,7 @@ public class AlgorithmService {
                 .build();
     }
 
+    @Transactional
     public EditAlgorithmResponseDto editAlgorithm(Long solutionId, Long userId, EditAlgorithmDto editAlgorithmDto) {
         validateAddress(editAlgorithmDto.getAddress());
         User user = checkUser(userId);

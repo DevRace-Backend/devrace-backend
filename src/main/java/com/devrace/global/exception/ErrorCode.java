@@ -30,6 +30,7 @@ public enum ErrorCode {
     LOG_NOT_FOUND(404, "로그를 찾을 수 없습니다."),
     SOLUTION_NOT_FOUND(404, "제출된 알고리즘 풀이를 찾을 수 없습니다."),
     PROBLEM_NOT_FOUND(404, "알고리즘 문제를 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND(404, "댓글을 찾을 수 없습니다."),
 
     /*  408 REQUEST_TIMEOUT : 요청에 대한 응답 시간 초과  */
     TIMEOUT_ERROR(408, "응답시간을 초과하였습니다."),
