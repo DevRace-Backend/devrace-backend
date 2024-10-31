@@ -1,5 +1,6 @@
 package com.devrace.domain.user.entity;
 
+import com.devrace.domain.level.entity.UserLevel;
 import com.devrace.domain.user.enums.UserRole;
 import com.devrace.global.config.oauth.provider.OAuth2UserInfo;
 import com.devrace.global.entity.BaseTimeEntity;
@@ -10,9 +11,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
+import java.util.logging.Level;
+
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -53,6 +59,10 @@ public class User extends BaseTimeEntity {
 
     @Column
     private ZonedDateTime deletedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "user_level_id")
+    private UserLevel userLevel;
 
     public static User create(OAuth2UserInfo userInfo, String uniqueNickname) {
         return new User(
