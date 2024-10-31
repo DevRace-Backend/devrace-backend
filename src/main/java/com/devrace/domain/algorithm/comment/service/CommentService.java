@@ -64,6 +64,13 @@ public class CommentService {
                 .build();
     }
 
+    public void deleteComment(Long commentId, Long userId) {
+        Comment comment = checkComment(commentId);
+        validateUser(userId, comment);
+
+        commentRepository.delete(comment);
+    }
+
     private static void validateUser(Long userId, Comment comment) {
         if (!comment.getUser().getId().equals(userId)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
@@ -84,6 +91,5 @@ public class CommentService {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
     }
-    
-    
+
 }
