@@ -1,5 +1,6 @@
 package com.devrace.domain.algorithm.comment.controller;
 
+import com.devrace.domain.algorithm.comment.controller.dto.CommentResponseDto;
 import com.devrace.domain.algorithm.comment.controller.dto.CreateCommentDto;
 import com.devrace.domain.algorithm.comment.controller.dto.CreateCommentResponseDto;
 import com.devrace.domain.algorithm.comment.controller.dto.EditCommentDto;
@@ -10,12 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,5 +58,15 @@ public class CommentController {
         commentService.deleteComment(commentId, userId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("{solutionId}")
+    public ResponseEntity<List<CommentResponseDto>> getCommentList(
+            @PathVariable Long solutionId
+    ) {
+
+        List<CommentResponseDto> responseDtoList = commentService.getCommentList(solutionId);
+
+        return ResponseEntity.ok(responseDtoList);
     }
 }

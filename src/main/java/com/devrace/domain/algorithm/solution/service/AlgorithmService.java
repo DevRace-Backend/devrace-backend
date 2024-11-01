@@ -93,9 +93,9 @@ public class AlgorithmService {
                 .build();
     }
 
-    public AlgorithmResponseDto getAlgorithm(Long solutionId, Long userId) {
-        Solution solution = checkSolution(solutionId, userId);
-        User user = checkUser(userId);
+    public AlgorithmResponseDto getAlgorithm(Long solutionId) {
+        Solution solution = checkSolution(solutionId);
+        User user = checkUser(solution.getUserId());
         Problem problem = problemRepository.findById(solution.getProblemId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PROBLEM_NOT_FOUND));
 
@@ -108,7 +108,7 @@ public class AlgorithmService {
                 .isPublic(solution.isPublic())
                 .nickName(user.getNickname())
                 .imageUrl(user.getImageUrl())
-//                .levelBadgeImageUrl(user.getUserLevel().getLevelBadgeImageUrl())
+/**                .levelBadgeImageUrl(user.getUserLevel().getLevelBadgeImageUrl())   */
                 .build();
     }
 
@@ -145,6 +145,11 @@ public class AlgorithmService {
 
     private Solution checkSolution(Long solutionId, Long userId) {
         return algorithmRepository.findByIdAndUserId(solutionId, userId)
+                .orElseThrow(() -> new CustomException((ErrorCode.SOLUTION_NOT_FOUND)));
+    }
+
+    private Solution checkSolution(Long solutionId) {
+        return algorithmRepository.findById(solutionId)
                 .orElseThrow(() -> new CustomException((ErrorCode.SOLUTION_NOT_FOUND)));
     }
 }

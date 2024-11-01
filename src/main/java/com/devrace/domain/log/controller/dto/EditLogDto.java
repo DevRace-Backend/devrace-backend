@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class EditLogDto {
+public class  EditLogDto {
 
         private final String address;
         private final String title;
