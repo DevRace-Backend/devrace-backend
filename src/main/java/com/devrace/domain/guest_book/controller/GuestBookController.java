@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,12 +27,18 @@ public class GuestBookController {
     @PostMapping
     public ResponseEntity<Void> createGuestBook(@AuthenticationPrincipal Long userId, @Valid @RequestBody GuestBookCreateRequest request) {
         userGuestBookService.createMyPageGuestBook(userId, request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(null).build();
     }
 
     @PatchMapping("{guestBookId}")
     public ResponseEntity<Void> updateContent(@AuthenticationPrincipal Long userId, @PathVariable Long guestBookId, @Valid @RequestBody ContentUpdateRequest request) {
         guestBookService.updateContent(userId, guestBookId, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("{guestBookId}")
+    public ResponseEntity<Void> deleteGuestBook(@AuthenticationPrincipal Long userId, @PathVariable Long guestBookId) {
+        guestBookService.deleteGuestBook(userId, guestBookId);
         return ResponseEntity.noContent().build();
     }
 }

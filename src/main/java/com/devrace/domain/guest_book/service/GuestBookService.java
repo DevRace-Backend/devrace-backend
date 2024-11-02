@@ -30,15 +30,22 @@ public class GuestBookService {
         guestBook.changeContent(request.getContent());
     }
 
+    @Transactional
+    public void deleteGuestBook(Long writerId, Long guestBookId) {
+        GuestBook guestBook = getGuestBookById(guestBookId);
+        validateWriter(guestBook.getWriter().getId(), writerId);
+        guestBookRepository.deleteById(guestBookId);
+    }
+
+    @Transactional(readOnly = true)
+    public GuestBook getGuestBookById(Long guestBookId) {
+        return guestBookRepository.findById(guestBookId)
+                .orElseThrow(() -> new CustomException(GUEST_BOOK_NOT_FOUND));
+    }
+
     private void validateWriter(Long writerId, Long guestBookWriterId) {
         if (!writerId.equals(guestBookWriterId)) {
             throw new CustomException(FORBIDDEN);
         }
-    }
-
-    @Transactional(readOnly = true)
-    private GuestBook getGuestBookById(Long guestBookId) {
-        return guestBookRepository.findById(guestBookId)
-                .orElseThrow(() -> new CustomException(GUEST_BOOK_NOT_FOUND));
     }
 }
