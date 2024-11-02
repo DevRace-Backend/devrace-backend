@@ -54,46 +54,48 @@ class GuestBookServiceTest {
     }
 
     @Test
-    @DisplayName("updateContent(작성자ID, 방명록 수정 DTO(방명록PK, 수정할 내용)): 변경할 내용을 입력받아 방명록 내용을 변경한다.")
+    @DisplayName("updateContent(작성자ID, 방명록 수정 내용): 변경할 내용을 입력받아 방명록 내용을 변경한다.")
     void updateContent_success() {
         // given
         final User owner = createUser("myPageOwner", "owner@gmail.com", "owner");
         final User writer = createUser("writer", "writer@gmail.com", "writer");
         final String originContent = "방명록 작성";
-        GuestBook savedGuestBook = guestBookRepository.save(new GuestBook(originContent, owner, writer));
+        final GuestBook savedGuestBook = guestBookRepository.save(new GuestBook(originContent, owner, writer));
 
+        final Long guestBookId = savedGuestBook.getId();
         final String newContent = "변경한 방명록 작성";
-        final ContentUpdateRequest request = new ContentUpdateRequest(savedGuestBook.getId(), newContent);
+        final ContentUpdateRequest request = new ContentUpdateRequest(newContent);
 
         // when
-        guestBookService.updateContent(writer.getId(), request);
+        guestBookService.updateContent(writer.getId(), guestBookId, request);
 
         // then
         assertThat(request.getContent()).isEqualTo(savedGuestBook.getContent());
     }
 
     @Test
-    @DisplayName("updateContent(작성자ID, 방명록 수정 DTO(방명록PK, 수정할 내용)): 방명록의 작성자와 수정을 시도하는 유저의 PK가 다르면 실패한다.")
+    @DisplayName("updateContent(작성자ID, 방명록 수정 내용): 방명록의 작성자와 수정을 시도하는 유저의 PK가 다르면 실패한다.")
     void updateContent_is_not_a_writer_fail() {
         // given
         final User owner = createUser("myPageOwner", "owner@gmail.com", "owner");
         final User writer = createUser("writer", "writer@gmail.com", "writer");
         final String originContent = "방명록 작성";
-        GuestBook savedGuestBook = guestBookRepository.save(new GuestBook(originContent, owner, writer));
+        final GuestBook savedGuestBook = guestBookRepository.save(new GuestBook(originContent, owner, writer));
 
         final Long wrongWriterId = owner.getId();
+        final Long guestBookId = savedGuestBook.getId();
         final String newContent = "변경한 방명록 작성";
-        final ContentUpdateRequest request = new ContentUpdateRequest(savedGuestBook.getId(), newContent);
+        final ContentUpdateRequest request = new ContentUpdateRequest(newContent);
 
 
         // expected
-        assertThatThrownBy(() -> guestBookService.updateContent(wrongWriterId, request))
+        assertThatThrownBy(() -> guestBookService.updateContent(wrongWriterId, guestBookId, request))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(FORBIDDEN.getMessage());
     }
 
     @Test
-    @DisplayName("updateContent(작성자ID, 방명록 수정 DTO(방명록PK, 수정할 내용)): 존재하지 않는 방명록 PK로 방명록 조회 시 실패한다.")
+    @DisplayName("updateContent(작성자ID, 방명록 수정 내용): 존재하지 않는 방명록 PK로 방명록 조회 시 실패한다.")
     void updateContent_does_not_exist_id_fail() {
         // given
         final User owner = createUser("myPageOwner", "owner@gmail.com", "owner");
@@ -103,10 +105,10 @@ class GuestBookServiceTest {
 
         final Long wrongGuestBookId = Long.valueOf(guestBookRepository.count() +1L);
         final String newContent = "변경한 방명록 작성";
-        final ContentUpdateRequest request = new ContentUpdateRequest(wrongGuestBookId, newContent);
+        final ContentUpdateRequest request = new ContentUpdateRequest(newContent);
 
         // expected
-        assertThatThrownBy(() -> guestBookService.updateContent(writer.getId(), request))
+        assertThatThrownBy(() -> guestBookService.updateContent(writer.getId(), wrongGuestBookId, request))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(GUEST_BOOK_NOT_FOUND.getMessage());
     }
