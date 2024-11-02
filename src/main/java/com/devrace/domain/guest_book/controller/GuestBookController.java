@@ -6,7 +6,6 @@ import com.devrace.domain.guest_book.controller.dto.request.GuestBookCreateReque
 import com.devrace.domain.guest_book.service.GuestBookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,12 +26,12 @@ public class GuestBookController {
     @PostMapping
     public ResponseEntity<Void> createGuestBook(@AuthenticationPrincipal Long userId, @Valid @RequestBody GuestBookCreateRequest request) {
         userGuestBookService.createMyPageGuestBook(userId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("{guestBookId}")
     public ResponseEntity<Void> updateContent(@AuthenticationPrincipal Long userId, @PathVariable Long guestBookId, @Valid @RequestBody ContentUpdateRequest request) {
         guestBookService.updateContent(userId, guestBookId, request);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.noContent().build();
     }
 }
