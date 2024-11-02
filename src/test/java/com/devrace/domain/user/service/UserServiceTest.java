@@ -62,7 +62,7 @@ class UserServiceTest {
         User user4 = createUser("Tester3", "tester3@gmail.com", "Yap");
         userRepository.saveAll(List.of(user1, user2, user3, user4));
 
-        final Long wrongUserId = Long.valueOf(userRepository.findAll().size());
+        final Long wrongUserId = Long.valueOf(userRepository.count() +1L);
 
         // expected
         assertThatThrownBy(() -> userService.getMyInfo(wrongUserId))

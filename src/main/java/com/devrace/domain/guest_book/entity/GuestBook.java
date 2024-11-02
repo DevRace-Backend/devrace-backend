@@ -39,4 +39,8 @@ public class GuestBook extends BaseTimeEntity {
         this.myPageOwner = myPageOwner;
         this.writer = writer;
     }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
 }

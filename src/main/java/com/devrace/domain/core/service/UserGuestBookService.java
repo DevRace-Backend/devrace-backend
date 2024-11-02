@@ -19,6 +19,6 @@ public class UserGuestBookService {
         User myPageOwner = userService.getUserByNickname(myPageOwnerNickname);
         User writer = userService.getUserById(writerId);
 
-        guestBookService.createGuestBook(myPageOwner, writer, request.getContent());
+        guestBookService.createGuestBook(request.getContent(), myPageOwner, writer);
     }
 }
