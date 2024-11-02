@@ -53,8 +53,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("getMyInfo(유저PK): 유저 PK를 받아 사용자를 조회한다.")
-    void getMyInfo_does_not_exist_id_fail() {
+    @DisplayName("getMyInfo(유저PK): 존재하지 않는 유저 PK로 사용자를 조회하면 실패한다.")
+    void getUserById_does_not_exist_id_fail() {
         // given
         User user1 = createUser("Hut234", "tester@gmail.com", "Hi");
         User user2 = createUser("Tester1", "tester1@gmail.com", "Hey");
@@ -62,7 +62,7 @@ class UserServiceTest {
         User user4 = createUser("Tester3", "tester3@gmail.com", "Yap");
         userRepository.saveAll(List.of(user1, user2, user3, user4));
 
-        final Long wrongUserId = Long.MAX_VALUE;
+        final Long wrongUserId = Long.valueOf(userRepository.findAll().size());
 
         // expected
         assertThatThrownBy(() -> userService.getMyInfo(wrongUserId))
@@ -89,8 +89,24 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("getUserInfo(닉네임): 닉네임 대소문자가 다른 경우 예외가 발생한다.")
-    void getUserInfo_letter_case_fail() {
+    @DisplayName("getUserInfo(닉네임): 존재하지 않는 닉네임인 경우 실패한다.")
+    void getUserByNickname_does_not_exist_nickname_fail() {
+        // given
+        final String nickname = "Hut234";
+        final String different_letter_case = "hut234";
+
+        User user = createUser(nickname, "tester", "test@gmail.com");
+        userRepository.save(user);
+
+        // expected
+        assertThatThrownBy(() -> userService.getUserInfo(different_letter_case))
+                .isInstanceOf(CustomException.class)
+                .hasMessage(USER_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("getUserInfo(닉네임): 닉네임 대소문자가 다른 경우 실패한다.")
+    void getUserByNickname_letter_case_fail() {
         // given
         final String nickname = "Hut234";
         final String different_letter_case = "hut234";

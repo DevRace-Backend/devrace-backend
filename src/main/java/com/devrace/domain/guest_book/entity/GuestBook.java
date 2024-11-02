@@ -23,7 +23,7 @@ public class GuestBook extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 300, nullable = false)
+    @Column(length = 400, nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,4 +33,10 @@ public class GuestBook extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id", nullable = false)
     private User writer;
+
+    public GuestBook(String content, User myPageOwner, User writer) {
+        this.content = content;
+        this.myPageOwner = myPageOwner;
+        this.writer = writer;
+    }
 }

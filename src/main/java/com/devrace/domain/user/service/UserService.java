@@ -35,16 +35,13 @@ public class UserService {
         return userRepository.findByPrimaryEmail(email);
     }
 
-    @Transactional(readOnly = true)
     public MyInfoResponse getMyInfo(Long userId) {
         User user = getUserById(userId);
         return MyInfoResponse.from(user);
     }
 
-    @Transactional(readOnly = true)
     public UserInfoResponse getUserInfo(String nickname) {
-        User user = userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        User user = getUserByNickname(nickname);
         return UserInfoResponse.from(user);
     }
 
@@ -84,8 +81,14 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    private User getUserById(Long userId) {
+    public User getUserById(Long userId) {
         return userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public User getUserByNickname(String nickname) {
+        return userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 }
