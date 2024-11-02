@@ -8,7 +8,6 @@ import com.devrace.domain.guest_book.entity.GuestBook;
 import com.devrace.domain.guest_book.repository.GuestBookRepository;
 import com.devrace.domain.user.entity.User;
 import com.devrace.global.exception.CustomException;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,20 +24,19 @@ public class GuestBookService {
     }
 
     @Transactional
-    public void updateContent(Long writerId, ContentUpdateRequest request) {
-        GuestBook guestBook = getGuestBookById(request.getGuestBookId());
-
-        if (isNotWriter(writerId, guestBook)) {
-            throw new CustomException(FORBIDDEN);
-        }
-
+    public void updateContent(Long writerId, Long guestBookId, ContentUpdateRequest request) {
+        GuestBook guestBook = getGuestBookById(guestBookId);
+        validateWriter(guestBook.getWriter().getId(), writerId);
         guestBook.changeContent(request.getContent());
     }
 
-    private boolean isNotWriter(Long writerId, GuestBook guestBook) {
-        return !Objects.equals(guestBook.getWriter().getId(), writerId);
+    private void validateWriter(Long writerId, Long guestBookWriterId) {
+        if (!writerId.equals(guestBookWriterId)) {
+            throw new CustomException(FORBIDDEN);
+        }
     }
 
+    @Transactional(readOnly = true)
     private GuestBook getGuestBookById(Long guestBookId) {
         return guestBookRepository.findById(guestBookId)
                 .orElseThrow(() -> new CustomException(GUEST_BOOK_NOT_FOUND));
