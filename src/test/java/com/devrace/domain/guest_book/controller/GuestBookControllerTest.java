@@ -2,6 +2,7 @@ package com.devrace.domain.guest_book.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -227,7 +228,7 @@ class GuestBookControllerTest {
     }
 
     @Test
-    @DisplayName("updateContent(작성자PK, 방명록 수정 내용): 방명록 수정 내용을 입력받아 방명록 내용을 수정한다.")
+    @DisplayName("updateContent(작성자PK, 방명록PK, 방명록 수정 내용): 방명록 수정 내용을 입력받아 방명록 내용을 수정한다.")
     void updateContent_success() throws Exception {
         // given
         final String uri = "/api/v1/guest-books/{guestBookId}";
@@ -240,12 +241,11 @@ class GuestBookControllerTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(requestBody))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
-
     @Test
-    @DisplayName("updateContent(작성자PK, 방명록 수정 내용): 방명록 수정 내용이 null 이면 실패한다.")
+    @DisplayName("updateContent(작성자PK, 방명록PK, 방명록 수정 내용): 방명록 수정 내용이 null 이면 실패한다.")
     void updateContent_content_null_validation() throws Exception {
         // given
         final String uri = "/api/v1/guest-books/{guestBookId}";
@@ -264,7 +264,7 @@ class GuestBookControllerTest {
     }
 
     @Test
-    @DisplayName("updateContent(작성자PK, 방명록 수정 내용): 방명록 수정 내용이 1자 미만이면 실패한다.")
+    @DisplayName("updateContent(작성자PK, 방명록PK, 방명록 수정 내용): 방명록 수정 내용이 1자 미만이면 실패한다.")
     void updateContent_content_min_validation() throws Exception {
         // given
         final String uri = "/api/v1/guest-books/{guestBookId}";
@@ -284,7 +284,7 @@ class GuestBookControllerTest {
     }
 
     @Test
-    @DisplayName("updateContent(작성자PK, 방명록 수정 내용): 방명록 수정 내용이 공백이면 실패한다.")
+    @DisplayName("updateContent(작성자PK, 방명록PK, 방명록 수정 내용): 방명록 수정 내용이 공백이면 실패한다.")
     void updateContent_content_min_validation2() throws Exception {
         // given
         final String uri = "/api/v1/guest-books/{guestBookId}";
@@ -304,7 +304,7 @@ class GuestBookControllerTest {
     }
 
     @Test
-    @DisplayName("updateContent(작성자PK, 방명록 수정 내용): 방명록 수정 내용이 400자 초과하면 실패한다.")
+    @DisplayName("updateContent(작성자PK, 방명록PK, 방명록 수정 내용): 방명록 수정 내용이 400자 초과하면 실패한다.")
     void updateContent_content_max_validation() throws Exception {
         // given
         final String uri = "/api/v1/guest-books/{guestBookId}";
@@ -323,4 +323,15 @@ class GuestBookControllerTest {
                 .andExpect(jsonPath("$.data[0].message").value(ContentUpdateRequest.CONTENT_MESSAGE));
     }
 
+    @Test
+    @DisplayName("deleteGuestBook(작성자PK, 방명록PK): 작성자PK, 방명록PK를 입력받아 방명록을 삭제한다.")
+    void deleteGuestBook() throws Exception {
+        // given
+        final String uri = "/api/v1/guest-books/{guestBookId}";
+
+        // expected
+        mockMvc.perform(delete(uri, 1L).with(csrf()))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
 }
