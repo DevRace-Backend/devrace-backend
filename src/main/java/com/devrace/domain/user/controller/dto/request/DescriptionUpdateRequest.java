@@ -14,7 +14,7 @@ public class DescriptionUpdateRequest {
 
     @Schema(description = "변경할 자기소개", example = "반갑습니다! 하하하~")
     @NotBlank(message = MESSAGE)
-    @Size(min = 1, max = 200, message = MESSAGE)
+    @Size(max = 200, message = MESSAGE)
     private String description;
 
     public DescriptionUpdateRequest(String description) {
