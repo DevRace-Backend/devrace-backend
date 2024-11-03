@@ -23,17 +23,13 @@ public class CommitScheduler {
     @Scheduled(cron = "0 0 */6 * * *")
     public void updateCommitScheduler() {
         ZonedDateTime toDate = ZonedDateTime.now();
-        log.info("스케줄러 시작 ", toDate);
         userRepository.findAll().forEach(user -> {
             try {
-                log.info("유저 정보 수집 ", user.getId());
                 commitService.collectCommitData(user.getId(), toDate);
-                log.info("수집 성공 ", user.getId());
             } catch (Exception e) {
                 log.error("문제 발생.  User :", user.getId(), ",  message : ", e.getMessage());
             }
         });
-        log.info("정보 수집 끝 ", ZonedDateTime.now());
     }
 
 }
