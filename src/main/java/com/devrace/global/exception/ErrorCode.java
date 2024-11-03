@@ -28,9 +28,11 @@ public enum ErrorCode {
     ACCESS_DENIED(404, "접근 권한이 없습니다."),
     USER_NOT_FOUND(404, "유저를 찾을 수 없습니다."),
     LOG_NOT_FOUND(404, "로그를 찾을 수 없습니다."),
+    GITHUB_NOT_FOUND(404, "연결된 깃허브를 찾을 수 없습니다."),
     SOLUTION_NOT_FOUND(404, "제출된 알고리즘 풀이를 찾을 수 없습니다."),
     PROBLEM_NOT_FOUND(404, "알고리즘 문제를 찾을 수 없습니다."),
     COMMENT_NOT_FOUND(404, "댓글을 찾을 수 없습니다."),
+    COMMIT_COUNT_NOT_FOUND(404, "커밋 갯수가 없습니다."),
 
     /*  408 REQUEST_TIMEOUT : 요청에 대한 응답 시간 초과  */
     TIMEOUT_ERROR(408, "응답시간을 초과하였습니다."),
@@ -42,6 +44,11 @@ public enum ErrorCode {
     /*  500 INTERNAL_SERVER_ERROR : 서버 에러  */
     INTERNAL_SERVER_ERROR(500, "내부 서버 에러입니다."),
     INTERRUPTED_ERROR(500, " Interrupted 에러 발생."),
+    GITHUB_API_IS_NOT_VALID(500, "유효하지 않은 깃허브 API 입니다."),
+    CAN_NOT_EXTRACTION_COMMIT_COUNT(500, "커밋 갯수를 가져오지 못하였습니다."),
+
+    /*  502 BAD_GATEWAY  연결 실패   */
+    FAIL_TO_CONNECT_GITHUB(502, "깃허브 API 연결에 실패하였습니다.")
     ;
 
     private final Integer httpStatus;
