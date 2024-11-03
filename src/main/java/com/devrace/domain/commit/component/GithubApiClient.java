@@ -20,7 +20,7 @@ public class GithubApiClient {
 
     private final GitHub github;
 
-    public GithubApiClient (@Value("${COMMIT_TOKEN}") String oauthToken) {
+    public GithubApiClient(@Value("${github.oauth.token}") String oauthToken) {
         try {
             this.github = new GitHubBuilder().withOAuthToken(oauthToken).build();
 
