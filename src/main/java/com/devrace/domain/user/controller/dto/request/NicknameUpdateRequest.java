@@ -14,7 +14,7 @@ public class NicknameUpdateRequest {
 
     @Schema(description = "변경할 닉네임", example = "새로운 닉네임임돠")
     @NotBlank(message = MESSAGE)
-    @Size(min = 1, max = 21, message = MESSAGE)
+    @Size(max = 21, message = MESSAGE)
     private String nickname;
 
     public NicknameUpdateRequest(String nickname) {

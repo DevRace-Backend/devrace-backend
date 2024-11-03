@@ -40,18 +40,18 @@ public class UserController {
     @PatchMapping("/me/nickname")
     public ResponseEntity<Void> updateNickname(@AuthenticationPrincipal Long userId, @Valid @RequestBody NicknameUpdateRequest request) {
         userService.updateNickname(userId, request);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/me/description")
     public ResponseEntity<Void> updateDescription(@AuthenticationPrincipal Long userId, @Valid @RequestBody DescriptionUpdateRequest request) {
         userService.updateDescription(userId, request);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/me/blog-address")
     public ResponseEntity<Void> updateBlogAddress(@AuthenticationPrincipal Long userId, @RequestBody BlogAddressUpdateRequest request) {
         userService.updateBlogAddress(userId, request);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.noContent().build();
     }
 }

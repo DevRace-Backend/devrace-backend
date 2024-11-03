@@ -95,7 +95,7 @@ class UserControllerTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(requestBody))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -192,7 +192,7 @@ class UserControllerTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(requestBody))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -293,6 +293,6 @@ class UserControllerTest {
                         .contentType(APPLICATION_JSON_VALUE)
                         .content(requestBody))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 }
