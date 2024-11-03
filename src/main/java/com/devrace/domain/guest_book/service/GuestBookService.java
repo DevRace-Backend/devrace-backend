@@ -8,7 +8,9 @@ import com.devrace.domain.guest_book.entity.GuestBook;
 import com.devrace.domain.guest_book.repository.GuestBookRepository;
 import com.devrace.domain.user.entity.User;
 import com.devrace.global.exception.CustomException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,11 @@ public class GuestBookService {
         GuestBook guestBook = getGuestBookById(guestBookId);
         validateWriter(guestBook.getWriter().getId(), writerId);
         guestBookRepository.deleteById(guestBookId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GuestBook> getAllByMyPageOwnerId(Long myPageOwnerId, Pageable pageable) {
+        return guestBookRepository.findAllByMyPageOwnerId(myPageOwnerId, pageable);
     }
 
     @Transactional(readOnly = true)

@@ -12,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = @Index(name = "idx_nickname", columnList = "nickname"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
 

@@ -11,7 +11,7 @@ public class UserInfoResponse {
     private String nickname;
     private String description;
 
-    // to do: 팔로잉, 팔로워 수 추가 필요
+    // todo: 팔로잉, 팔로워 수 추가 필요
 
     private String blogAddress;
     private String githubAddress;
