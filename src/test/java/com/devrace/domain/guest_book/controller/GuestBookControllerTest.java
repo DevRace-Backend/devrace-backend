@@ -3,6 +3,7 @@ package com.devrace.domain.guest_book.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -48,6 +49,24 @@ class GuestBookControllerTest {
     void setUp() {
         PreAuthenticatedAuthenticationToken authentication = new PreAuthenticatedAuthenticationToken(1L, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
         SecurityContextHolder.getContextHolderStrategy().getContext().setAuthentication(authentication);
+    }
+
+    @Test
+    @DisplayName("getGuestBookList(마이페이지 주인 닉네임, 페이지, 사이즈): 마이페이지 주인의 방명록을 페이지, 사이즈 정보만큼 가져온다.")
+    void getGuestBookList() throws Exception {
+        // given
+        final String uri = "/api/v1/guest-books";
+        final String nickname = "Hut234";
+        final String page = "0";
+        final String size = "10";
+
+        // expected
+        mockMvc.perform(get(uri)
+                        .queryParam("nickname", nickname)
+                        .queryParam("page", page)
+                        .queryParam("size", size))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test

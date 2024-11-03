@@ -65,7 +65,7 @@ class UserServiceTest {
         final Long wrongUserId = Long.valueOf(userRepository.count() +1L);
 
         // expected
-        assertThatThrownBy(() -> userService.getMyInfo(wrongUserId))
+        assertThatThrownBy(() -> userService.getUserById(wrongUserId))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(USER_NOT_FOUND.getMessage());
     }
@@ -99,7 +99,7 @@ class UserServiceTest {
         userRepository.save(user);
 
         // expected
-        assertThatThrownBy(() -> userService.getUserInfo(different_letter_case))
+        assertThatThrownBy(() -> userService.getUserByNickname(different_letter_case))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(USER_NOT_FOUND.getMessage());
     }
@@ -115,7 +115,7 @@ class UserServiceTest {
         userRepository.save(user);
 
         // expected
-        assertThatThrownBy(() -> userService.getUserInfo(different_letter_case))
+        assertThatThrownBy(() -> userService.getUserByNickname(different_letter_case))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(USER_NOT_FOUND.getMessage());
     }

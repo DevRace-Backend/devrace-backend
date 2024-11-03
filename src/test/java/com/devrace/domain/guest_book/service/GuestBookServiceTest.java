@@ -16,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,11 +104,9 @@ class GuestBookServiceTest {
         guestBookRepository.save(new GuestBook(originContent, owner, writer));
 
         final Long wrongGuestBookId = Long.valueOf(guestBookRepository.count() + 1L);
-        final String newContent = "변경한 방명록 작성";
-        final ContentUpdateRequest request = new ContentUpdateRequest(newContent);
 
         // expected
-        assertThatThrownBy(() -> guestBookService.updateContent(writer.getId(), wrongGuestBookId, request))
+        assertThatThrownBy(() -> guestBookService.getGuestBookById(wrongGuestBookId))
                 .isInstanceOf(CustomException.class)
                 .hasMessage(GUEST_BOOK_NOT_FOUND.getMessage());
     }
@@ -130,6 +129,29 @@ class GuestBookServiceTest {
         // then
         long guestBooks = guestBookRepository.count();
         assertThat(guestBooks).isEqualTo(2L);
+    }
+
+    @Test
+    @DisplayName("getAllByMyPageOwnerId(마이페이지 주인 ID, 페이지 정보): 마이페이지 주인 ID에 해당하는 방명록 리스트를 페이지 정보만큼 조회한다.")
+    void getAllByMyPageOwnerId() {
+        // given
+        final User owner = createUser("myPageOwner", "owner@gmail.com", "owner");
+        final User writer = createUser("writer", "writer@gmail.com", "writer");
+        final String content = "방명록 작성";
+        final int guestBookSize = 11;
+        for (int i = 0; i < guestBookSize; i++) {
+            guestBookRepository.save(new GuestBook(content, owner, writer));
+        }
+
+        final int page = 0;
+        final int size = 8;
+        final PageRequest pageRequest = PageRequest.of(page, size);
+
+        // when
+        List<GuestBook> result = guestBookService.getAllByMyPageOwnerId(owner.getId(), pageRequest);
+
+        // then
+        assertThat(result.size()).isEqualTo(size);
     }
 
     private GuestBook createGuestBook(String content, User owner, User writer) {

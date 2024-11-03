@@ -76,11 +76,6 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    private boolean isNotUniqueNickname(String nickname) {
-        return userRepository.existsByNickname(nickname);
-    }
-
-    @Transactional(readOnly = true)
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
@@ -90,5 +85,10 @@ public class UserService {
     public User getUserByNickname(String nickname) {
         return userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    private boolean isNotUniqueNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
     }
 }
