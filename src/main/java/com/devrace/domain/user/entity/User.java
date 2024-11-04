@@ -1,6 +1,7 @@
 package com.devrace.domain.user.entity;
 
 import com.devrace.domain.commit.entity.CommitCount;
+import com.devrace.domain.commit_level.entity.CommitLevel;
 import com.devrace.domain.follow.entity.Follower;
 import com.devrace.domain.follow.entity.Following;
 import com.devrace.domain.user.enums.UserRole;
@@ -22,7 +23,6 @@ import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -65,8 +65,11 @@ public class User extends BaseTimeEntity {
     @Column
     private ZonedDateTime deletedAt;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private CommitCount commitCount;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private CommitLevel commitLevel;
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follower> followerList = new ArrayList<Follower>();
