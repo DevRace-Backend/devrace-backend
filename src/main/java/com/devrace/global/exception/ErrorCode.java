@@ -26,6 +26,9 @@ public enum ErrorCode {
     /*  404 NOT_FOUND : Resource 권한 없음, Resource 를 찾을 수 없음  */
     ACCESS_DENIED(404, "접근 권한이 없습니다."),
     USER_NOT_FOUND(404, "유저를 찾을 수 없습니다."),
+    FOLLOW_NOT_FOUND(404, "팔로우 관계를 찾을 수 없습니다."),
+    FOLLOWER_NOT_FOUND(404, "나를 팔로우 하는 유저를 찾을 수 없습니다."),
+    FOLLOWING_NOT_FOUND(404, "내가 팔로잉하는 유저를 찾을 수 없습니다."),
     LOG_NOT_FOUND(404, "로그를 찾을 수 없습니다."),
     GITHUB_NOT_FOUND(404, "연결된 깃허브를 찾을 수 없습니다."),
     SOLUTION_NOT_FOUND(404, "제출된 알고리즘 풀이를 찾을 수 없습니다."),
