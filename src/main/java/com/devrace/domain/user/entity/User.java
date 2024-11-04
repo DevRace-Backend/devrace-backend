@@ -1,9 +1,12 @@
 package com.devrace.domain.user.entity;
 
 import com.devrace.domain.commit.entity.CommitCount;
+import com.devrace.domain.follow.entity.Follower;
+import com.devrace.domain.follow.entity.Following;
 import com.devrace.domain.user.enums.UserRole;
 import com.devrace.global.config.oauth.provider.OAuth2UserInfo;
 import com.devrace.global.entity.BaseTimeEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,9 +16,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,6 +67,12 @@ public class User extends BaseTimeEntity {
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private CommitCount commitCount;
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follower> followerList = new ArrayList<Follower>();
+
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Following> followingList = new ArrayList<Following>();
 
     public static User create(OAuth2UserInfo userInfo, String uniqueNickname) {
         return new User(

@@ -2,7 +2,6 @@ package com.devrace.domain.scheduler;
 
 import com.devrace.domain.commit.entity.CommitHistory;
 import com.devrace.domain.commit.repository.CommitHistoryRepository;
-import com.devrace.domain.commit.repository.CommitRepository;
 import com.devrace.domain.user.entity.User;
 import com.devrace.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
