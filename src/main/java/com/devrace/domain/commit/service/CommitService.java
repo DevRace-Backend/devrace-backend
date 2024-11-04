@@ -14,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.IsoFields;
 
 @Service
 @RequiredArgsConstructor
@@ -137,4 +139,32 @@ public class CommitService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
+
+
+    /**
+     * 원하는 월, 주, 일에 해당하는 커밋을 가져오는 로직
+     */
+
+    public long getCommitCountForMonth(User user, int year, int month) {
+        ZonedDateTime startDate = ZonedDateTime.of(year, month, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+        ZonedDateTime endDate = startDate.plusMonths(1).minusNanos(1);
+        return commitRepository.countByUserAndCommitDateBetween(user, startDate, endDate);
+    }
+
+    public long getCommitCountForWeek(User user, int year, int week) {
+        ZonedDateTime startDate = ZonedDateTime.now()
+                .withYear(year)
+                .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, week)
+                .with(DayOfWeek.MONDAY);
+        ZonedDateTime endDate = startDate.plusWeeks(1).minusNanos(1);
+        return commitRepository.countByUserAndCommitDateBetween(user, startDate, endDate);
+    }
+
+    public long getCommitCountForDay(User user, int year, int month, int day) {
+        ZonedDateTime startDate = ZonedDateTime.of(year, month, day, 0, 0, 0, 0, ZoneOffset.UTC);
+        ZonedDateTime endDate = startDate.plusDays(1).minusNanos(1);
+        return commitRepository.countByUserAndCommitDateBetween(user, startDate, endDate);
+    }
+
+
 }
