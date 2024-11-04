@@ -1,4 +1,4 @@
-package com.devrace.domain.level.entity;
+package com.devrace.domain.user_level.entitiy;
 
 import com.devrace.global.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(indexes = @Index(name = "idx_requirement", columnList = "requirement"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserLevel extends BaseTimeEntity {
+public class UserLevelMetadata extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
