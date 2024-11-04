@@ -12,4 +12,5 @@ import java.util.Optional;
 @Repository
 public interface CommitRepository extends JpaRepository<Commit, Long> {
     Optional<Commit> findByUserAndCommitDate(User user, ZonedDateTime commitDate);
+    long countByUserAndCommitDateBetween(User user, ZonedDateTime startDate, ZonedDateTime endDate);
 }

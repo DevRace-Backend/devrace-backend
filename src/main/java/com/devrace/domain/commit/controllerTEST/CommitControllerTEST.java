@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 @RestController
 @RequestMapping("/api/commit")
 @RequiredArgsConstructor
-public class CommitController {
+public class CommitControllerTEST {
 
     private final CommitService commitService;
 
