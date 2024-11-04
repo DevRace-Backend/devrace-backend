@@ -1,6 +1,7 @@
 package com.devrace.domain.commit.controllerTEST;
 
 import com.devrace.domain.commit.service.CommitService;
+import java.time.ZoneOffset;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ public class CommitControllerTEST {
 
     @PostMapping("/{userId}")
     public String commitTest(@PathVariable Long userId) {
-        ZonedDateTime toDate = ZonedDateTime.now();
+        ZonedDateTime toDate = ZonedDateTime.now(ZoneOffset.UTC);
 
         try {
             commitService.collectCommitData(userId, toDate);

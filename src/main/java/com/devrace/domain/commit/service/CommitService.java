@@ -10,13 +10,12 @@ import com.devrace.domain.user.repository.UserRepository;
 import com.devrace.global.exception.CustomException;
 import com.devrace.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.time.DayOfWeek;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import java.time.temporal.IsoFields;
 
 @Service
@@ -52,9 +51,31 @@ public class CommitService {
 
             // 커밋 카운트 갱신
             updateCommitCount(user, toDate, newCommits);
-
         }
+    }
 
+    /**
+     * 원하는 월, 주, 일에 해당하는 커밋을 가져오는 로직
+     */
+    public long getCommitCountForMonth(User user, int year, int month) {
+        ZonedDateTime startDate = ZonedDateTime.of(year, month, 1, 0, 0, 0, 0, ZoneOffset.UTC);
+        ZonedDateTime endDate = startDate.plusMonths(1).minusNanos(1);
+        return commitRepository.countByUserAndCommitDateBetween(user, startDate, endDate);
+    }
+
+    public long getCommitCountForWeek(User user, int year, int week) {
+        ZonedDateTime startDate = ZonedDateTime.now(ZoneOffset.UTC)
+                .withYear(year)
+                .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, week)
+                .with(DayOfWeek.MONDAY);
+        ZonedDateTime endDate = startDate.plusWeeks(1).minusNanos(1);
+        return commitRepository.countByUserAndCommitDateBetween(user, startDate, endDate);
+    }
+
+    public long getCommitCountForDay(User user, int year, int month, int day) {
+        ZonedDateTime startDate = ZonedDateTime.of(year, month, day, 0, 0, 0, 0, ZoneOffset.UTC);
+        ZonedDateTime endDate = startDate.plusDays(1).minusNanos(1);
+        return commitRepository.countByUserAndCommitDateBetween(user, startDate, endDate);
     }
 
     /**
@@ -81,7 +102,30 @@ public class CommitService {
     }
 
     private void updateCommitCount(User user, ZonedDateTime toDate, long newCommits) {
-        CommitCount commitCount = commitCountRepository.findByUser(user)
+        CommitCount commitCount = getCommitCount(user);
+
+        updateMonthlyCommits(toDate, newCommits, commitCount);
+        updateWeeklyCommits(toDate, newCommits, commitCount);
+        updateDailyCommits(toDate, newCommits, commitCount);
+
+        commitCount.addTotalCommits(newCommits);
+        commitCount.setRecentlyUpdateTime(toDate);
+    }
+
+    private void updateMonthlyCommits(ZonedDateTime toDate, long newCommits, CommitCount commitCount) {
+        commitCount.updateMonthlyCommits(newCommits, isNewMonth(commitCount.getRecentlyUpdateTime(), toDate));
+    }
+
+    private void updateWeeklyCommits(ZonedDateTime toDate, long newCommits, CommitCount commitCount) {
+        commitCount.updateWeeklyCommits(newCommits, isNewWeek(commitCount.getRecentlyUpdateTime(), toDate));
+    }
+
+    private void updateDailyCommits(ZonedDateTime toDate, long newCommits, CommitCount commitCount) {
+        commitCount.updateDailyCommits(newCommits, isNewDay(commitCount.getRecentlyUpdateTime(), toDate));
+    }
+
+    private CommitCount getCommitCount(User user) {
+        return commitCountRepository.findByUser(user)
                 .orElseGet(() -> {
                     CommitCount createCommitCount = CommitCount.builder()
                             .user(user)
@@ -93,78 +137,28 @@ public class CommitService {
                             .build();
                     return commitCountRepository.save(createCommitCount);
                 });
-
-        boolean isNewMonth = !isSameMonth(commitCount.getRecentlyUpdateTime(), toDate);
-        if (isNewMonth) {
-            commitCount.updateMonthlyCommits(newCommits, true);
-        } else {
-            commitCount.updateMonthlyCommits(newCommits, false);
-        }
-
-        boolean isNewWeek = !isSameWeek(commitCount.getRecentlyUpdateTime(), toDate);
-        if (isNewWeek) {
-            commitCount.updateWeeklyCommits(newCommits, true);
-        } else {
-            commitCount.updateWeeklyCommits(newCommits, false);
-        }
-
-        boolean isNewDay = !isSameDay(commitCount.getRecentlyUpdateTime(), toDate);
-        if (isNewDay) {
-            commitCount.updateDailyCommits(newCommits, true);
-        } else {
-            commitCount.updateDailyCommits(newCommits, false);
-        }
-
-        commitCount.updateTotalCommits(commitCount.getTotalCommits() + newCommits);
-        commitCount.setRecentlyUpdateTime(toDate);
     }
 
-    private boolean isSameMonth(ZonedDateTime recentlyUpdateTime, ZonedDateTime toDate) {
-        return recentlyUpdateTime.getYear() == toDate.getYear() && recentlyUpdateTime.getMonth() == toDate.getMonth();
+    private boolean isNewMonth(ZonedDateTime recentlyUpdateTime, ZonedDateTime toDate) {
+        return recentlyUpdateTime.getYear() != toDate.getYear()
+                || recentlyUpdateTime.getMonth() != toDate.getMonth();
     }
 
-    // 주간 확인.  연도와 주간(월~일)이 같은지 확인   시분초는 비교에 필요없으므로 제거
-    private boolean isSameWeek(ZonedDateTime recentlyUpdateTime, ZonedDateTime toDate) {
+    // 주간 확인.  연도와 주간(월~일)이 다른지 확인(시분초는 비교에 필요없으므로 제거)
+    private boolean isNewWeek(ZonedDateTime recentlyUpdateTime, ZonedDateTime toDate) {
         ZonedDateTime startWeek1 = recentlyUpdateTime.with(DayOfWeek.MONDAY).truncatedTo(ChronoUnit.DAYS);
         ZonedDateTime startWeek2 = toDate.with(DayOfWeek.MONDAY).truncatedTo(ChronoUnit.DAYS);
-        return recentlyUpdateTime.getYear() == toDate.getYear() && startWeek1.equals(startWeek2);
+        return recentlyUpdateTime.getYear() != toDate.getYear()
+                || !startWeek1.equals(startWeek2);
     }
 
-    private boolean isSameDay(ZonedDateTime recentlyUpdateTime, ZonedDateTime toDate) {
-        return recentlyUpdateTime.truncatedTo(ChronoUnit.DAYS)
-                .isEqual(toDate.truncatedTo(ChronoUnit.DAYS));
+    private boolean isNewDay(ZonedDateTime recentlyUpdateTime, ZonedDateTime toDate) {
+        return !recentlyUpdateTime.truncatedTo(ChronoUnit.DAYS)
+                .equals(toDate.truncatedTo(ChronoUnit.DAYS));
     }
 
     private User checkUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
-
-
-    /**
-     * 원하는 월, 주, 일에 해당하는 커밋을 가져오는 로직
-     */
-
-    public long getCommitCountForMonth(User user, int year, int month) {
-        ZonedDateTime startDate = ZonedDateTime.of(year, month, 1, 0, 0, 0, 0, ZoneOffset.UTC);
-        ZonedDateTime endDate = startDate.plusMonths(1).minusNanos(1);
-        return commitRepository.countByUserAndCommitDateBetween(user, startDate, endDate);
-    }
-
-    public long getCommitCountForWeek(User user, int year, int week) {
-        ZonedDateTime startDate = ZonedDateTime.now()
-                .withYear(year)
-                .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, week)
-                .with(DayOfWeek.MONDAY);
-        ZonedDateTime endDate = startDate.plusWeeks(1).minusNanos(1);
-        return commitRepository.countByUserAndCommitDateBetween(user, startDate, endDate);
-    }
-
-    public long getCommitCountForDay(User user, int year, int month, int day) {
-        ZonedDateTime startDate = ZonedDateTime.of(year, month, day, 0, 0, 0, 0, ZoneOffset.UTC);
-        ZonedDateTime endDate = startDate.plusDays(1).minusNanos(1);
-        return commitRepository.countByUserAndCommitDateBetween(user, startDate, endDate);
-    }
-
-
 }
