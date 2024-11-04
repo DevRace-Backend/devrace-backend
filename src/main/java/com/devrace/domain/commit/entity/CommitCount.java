@@ -37,8 +37,8 @@ public class CommitCount {
 
     private ZonedDateTime recentlyUpdateTime;
 
-    public void updateTotalCommits(long newCommits) {
-        this.totalCommits = newCommits;
+    public void addTotalCommits(long newCommits) {
+        this.totalCommits += newCommits;
     }
 
     public void updateMonthlyCommits(long newCommits, boolean isNewMonth) {
@@ -56,6 +56,4 @@ public class CommitCount {
     public void setRecentlyUpdateTime(ZonedDateTime now) {
         this.recentlyUpdateTime = now;
     }
-
-
 }

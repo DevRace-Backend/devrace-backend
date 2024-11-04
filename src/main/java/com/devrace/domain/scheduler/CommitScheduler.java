@@ -2,6 +2,7 @@ package com.devrace.domain.scheduler;
 
 import com.devrace.domain.commit.service.CommitService;
 import com.devrace.domain.user.repository.UserRepository;
+import java.time.ZoneOffset;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,7 +23,7 @@ public class CommitScheduler {
      */
     @Scheduled(cron = "0 0 */6 * * *")
     public void updateCommitScheduler() {
-        ZonedDateTime toDate = ZonedDateTime.now();
+        ZonedDateTime toDate = ZonedDateTime.now(ZoneOffset.UTC);
         userRepository.findAll().forEach(user -> {
             try {
                 commitService.collectCommitData(user.getId(), toDate);
