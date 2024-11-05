@@ -30,4 +30,10 @@ public class CommitLevelMetadata extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String imageUrl;
+
+    public CommitLevelMetadata(String name, int requirement, String imageUrl) {
+        this.name = name;
+        this.requirement = requirement;
+        this.imageUrl = imageUrl;
+    }
 }
