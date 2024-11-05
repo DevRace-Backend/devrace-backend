@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 import java.util.Arrays;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(indexes = @Index(name = "idx_user_type", columnList = "user_id, type"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class CategoryVisibility extends BaseTimeEntity {
 
     @Id
