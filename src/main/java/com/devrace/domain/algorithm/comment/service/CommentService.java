@@ -17,6 +17,10 @@ import com.devrace.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -75,13 +79,21 @@ public class CommentService {
     }
 
     @Transactional
-    public List<CommentResponseDto> getCommentList(Long solutionId) {
-        List<Comment> commentList = commentRepository.findBySolutionIdOrderByCreatedAtDesc(solutionId);
+    public List<CommentResponseDto> getCommentList(Long solutionId, int page, int size) {
+        if (page < 0 || size <= 0) {
+            throw new CustomException(ErrorCode.INVALID_PAGE_OR_SIZE);
+        }
 
-        commentList.forEach(comment ->
-                Hibernate.initialize(comment.getUser()));
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Comment> commentPage = commentRepository.findBySolutionIdOrderByCreatedAtDesc(solutionId, pageable);
 
-        return commentList.stream()
+        if (commentPage.isEmpty() && page >= commentPage.getTotalPages()) {
+            throw new CustomException(ErrorCode.PAGE_NOT_FOUND);
+        }
+
+        commentPage.getContent().forEach(comment -> Hibernate.initialize(comment.getUser()));
+
+        return commentPage.getContent().stream()
                 .map(comment -> CommentResponseDto.builder()
                         .id(comment.getId())
                         .nickName(comment.getUser().getNickname())
@@ -90,7 +102,6 @@ public class CommentService {
                         .content(comment.getContent())
                         .createdAt(comment.getCreatedAt())
                         .build())
-                .limit(10)
                 .toList();
     }
 

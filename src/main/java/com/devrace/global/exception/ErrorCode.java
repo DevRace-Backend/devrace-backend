@@ -16,6 +16,7 @@ public enum ErrorCode {
     INVALID_PROVIDER_ERROR(400, "지원하지 않는 소셜 로그인 시도"),
     EXPIRED_TOKEN(400, "만료된 토큰입니다."),
     INVALID_BLOG_ADDRESS(400,  "블로그 주소는 https://를 포함한 최소 8글자 이상으로 입력해 주세요."),
+    INVALID_PAGE_OR_SIZE(400,  "유효하지 않은 페이지입니다."),
 
     /*  401 UNAUTHORIZED : 인증 안됨  */
     UNAUTHORIZED(401, "인증되지 않았습니다."),
@@ -38,6 +39,7 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(404, "댓글을 찾을 수 없습니다."),
     COMMIT_COUNT_NOT_FOUND(404, "커밋 갯수가 없습니다."),
     GUEST_BOOK_NOT_FOUND(404, "방명록을 찾을 수 없습니다."),
+    PAGE_NOT_FOUND(404, "페이지를 찾을 수 없습니다."),
 
     /*  408 REQUEST_TIMEOUT : 요청에 대한 응답 시간 초과  */
     TIMEOUT_ERROR(408, "응답시간을 초과하였습니다."),
