@@ -53,9 +53,9 @@ class FollowServiceTest {
         userRepository.save(user2);
         userRepository.save(user3);
 
-        categoryVisibilityRepository.save(new CategoryVisibility(1L, CategoryType.FOLLOW, true, user1));
-        categoryVisibilityRepository.save(new CategoryVisibility(2L, CategoryType.FOLLOW, true, user2));
-        categoryVisibilityRepository.save(new CategoryVisibility(3L, CategoryType.FOLLOW, true, user3));
+        categoryVisibilityRepository.save(new CategoryVisibility(CategoryType.FOLLOW, user1));
+        categoryVisibilityRepository.save(new CategoryVisibility(CategoryType.FOLLOW, user2));
+        categoryVisibilityRepository.save(new CategoryVisibility(CategoryType.FOLLOW, user3));
     }
 
     @AfterEach
