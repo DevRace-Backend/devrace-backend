@@ -3,29 +3,18 @@ package com.devrace.domain.category_visibility.entity;
 import com.devrace.domain.category_visibility.enums.CategoryType;
 import com.devrace.domain.user.entity.User;
 import com.devrace.global.entity.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import java.util.Arrays;
-import java.util.List;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Getter
 @Entity
 @Table(indexes = @Index(name = "idx_user_type", columnList = "user_id, type"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class CategoryVisibility extends BaseTimeEntity {
 
     @Id
@@ -52,7 +41,7 @@ public class CategoryVisibility extends BaseTimeEntity {
         this.isPublic = isPublic;
     }
 
-    private CategoryVisibility(CategoryType type, User user) {
+    public CategoryVisibility(CategoryType type, User user) {
         this.type = type;
         this.isPublic = true;
         this.user = user;
