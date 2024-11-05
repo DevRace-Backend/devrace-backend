@@ -1,6 +1,8 @@
 package com.devrace.domain.commit.entity;
 
+import com.devrace.domain.commit.event.CommitCountUpdatedEvent;
 import com.devrace.domain.user.entity.User;
+import com.devrace.global.event.Events;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -39,6 +41,7 @@ public class CommitCount {
 
     public void addTotalCommits(long newCommits) {
         this.totalCommits += newCommits;
+        Events.raise(new CommitCountUpdatedEvent(user.getId(), this.totalCommits));
     }
 
     public void updateMonthlyCommits(long newCommits, boolean isNewMonth) {
