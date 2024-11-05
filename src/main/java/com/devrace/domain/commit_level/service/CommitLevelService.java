@@ -17,6 +17,7 @@ public class CommitLevelService {
     private final CommitLevelRepository commitLevelRepository;
     private final CommitLevelMetadataRepository commitLevelMetadataRepository;
 
+    @Transactional
     public void updateOrCreateCommitLevel(Long userId, long newTotalCommits) {
         CommitLevelMetadata commitLevelMetadata = commitLevelMetadataRepository.findFirstByTotalCommits(newTotalCommits);
         commitLevelRepository.findByUserId(userId)
