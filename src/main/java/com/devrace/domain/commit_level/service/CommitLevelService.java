@@ -26,15 +26,15 @@ public class CommitLevelService {
     }
 
     @Transactional
-    private void updateCommitLevel(CommitLevel commitLevel, CommitLevelMetadata commitLevelMetadata) {
+    protected void updateCommitLevel(CommitLevel commitLevel, CommitLevelMetadata commitLevelMetadata) {
         if (isChangedLevel(commitLevel, commitLevelMetadata)) {
             commitLevel.changeLevel(commitLevelMetadata);
         }
     }
 
     @Transactional
-    private CommitLevel createCommitLevel(Long userId, CommitLevelMetadata commitLevelMetadata) {
-        return commitLevelRepository.save(CommitLevel.create(commitLevelMetadata, userService.getUserById(userId)));
+    protected void createCommitLevel(Long userId, CommitLevelMetadata commitLevelMetadata) {
+        commitLevelRepository.save(CommitLevel.create(commitLevelMetadata, userService.getUserById(userId)));
     }
 
     private boolean isChangedLevel(CommitLevel commitLevel, CommitLevelMetadata commitLevelMetadata) {
