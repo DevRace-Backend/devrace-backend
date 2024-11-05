@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -62,10 +63,13 @@ public class CommentController {
 
     @GetMapping("{solutionId}")
     public ResponseEntity<List<CommentResponseDto>> getCommentList(
-            @PathVariable Long solutionId
+            @PathVariable Long solutionId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+
     ) {
 
-        List<CommentResponseDto> responseDtoList = commentService.getCommentList(solutionId);
+        List<CommentResponseDto> responseDtoList = commentService.getCommentList(solutionId, page, size);
 
         return ResponseEntity.ok(responseDtoList);
     }
