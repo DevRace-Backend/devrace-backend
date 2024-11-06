@@ -12,4 +12,6 @@ public interface LogRepository extends JpaRepository<Log, Long> {
     Optional<Log> findByAddressAndUserId(String address, Long userId);
 
     Optional<Log> findByIdAndUserId(Long logId, Long userId);
+
+    Optional<Log> findByUserId(Long id);
 }

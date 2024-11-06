@@ -32,6 +32,7 @@ public class LogCount {
     private long dailyLogs;
     private long continuousDays;
 
+    private ZonedDateTime submitDate;
     private ZonedDateTime recentlyupdatedTime;
 
     @OneToOne(fetch = FetchType.LAZY)

@@ -1,8 +1,10 @@
 package com.devrace.domain.log.service;
 
 import com.devrace.domain.log.controller.dto.EditLogDto;
+import com.devrace.domain.log.controller.dto.EditLogResponseDto;
 import com.devrace.domain.log.controller.dto.LogResponseDto;
 import com.devrace.domain.log.controller.dto.SubmitLogDto;
+import com.devrace.domain.log.controller.dto.SubmitLogResponseDto;
 import com.devrace.domain.log.entity.Log;
 import com.devrace.domain.log.repository.LogRepository;
 import com.devrace.domain.user.entity.User;
@@ -13,8 +15,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class LogService {
@@ -23,7 +23,7 @@ public class LogService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Log submitLog(SubmitLogDto submitLogDto, Long userId) {
+    public SubmitLogResponseDto submitLog(SubmitLogDto submitLogDto, Long userId) {
 
         User user = checkUser(userId);
 
@@ -35,11 +35,19 @@ public class LogService {
                 .userId(user.getId())
                 .build();
 
-        return logRepository.save(log);
+        logRepository.save(log);
+
+        return SubmitLogResponseDto.builder()
+                .status("성공")
+                .message("성공적으로 제출되었습니다.")
+                .logId(log.getId())
+                .createdAt(log.getCreatedAt())
+                .address(log.getAddress())
+                .build();
     }
 
     @Transactional
-    public Log editLog(Long logId, EditLogDto editLogDto, Long userId) {
+    public EditLogResponseDto editLog(Long logId, EditLogDto editLogDto, Long userId) {
         Log log = checkLog(logId, userId);
 
         log = Log.builder()
@@ -50,7 +58,14 @@ public class LogService {
                 .userId(userId)
                 .build();
 
-        return logRepository.save(log);
+        logRepository.save(log);
+
+        return EditLogResponseDto.builder()
+                .status("성공")
+                .message("성공적으로 수정되었습니다.")
+                .logId(logId)
+                .address(log.getAddress())
+                .build();
     }
 
     public Log getLogById(Long logId) {

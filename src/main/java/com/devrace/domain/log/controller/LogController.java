@@ -42,18 +42,9 @@ public class LogController {
                     .body(errorResponse);
         }
 
-        Log submitLog = logService.submitLog(submitLogDto, userId);
+        SubmitLogResponseDto successResponse = logService.submitLog(submitLogDto, userId);
 
-        SubmitLogResponseDto successResponse = SubmitLogResponseDto.builder()
-                .status("성공")
-                .message("성공적으로 제출되었습니다.")
-                .logId(submitLog.getId())
-                .createdAt(submitLog.getCreatedAt())
-                .address(submitLog.getAddress())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(successResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
     }
 
     @PatchMapping("/edit/{logId}")
@@ -73,9 +64,9 @@ public class LogController {
                     .body(errorResponse);
         }
 
-        Log editLog = logService.editLog(logId, editLogDto, userId);
+        EditLogResponseDto successResponse = logService.editLog(logId, editLogDto, userId);
 
-        EditLogResponseDto successResponse = EditLogResponseDto.builder()
+        EditLogResponseDto.builder()
                 .status("성공")
                 .message("성공적으로 수정되었습니다.")
                 .logId(logId)
