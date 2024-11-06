@@ -32,6 +32,7 @@ public class AlgorithmCount {
     private long dailySolutions;
     private long continuousDays;
 
+    private ZonedDateTime submitDate;
     private ZonedDateTime recentlyUpdatedTime;
 
     @OneToOne(fetch = FetchType.LAZY)
