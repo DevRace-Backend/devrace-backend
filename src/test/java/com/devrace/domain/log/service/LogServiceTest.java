@@ -1,6 +1,5 @@
 package com.devrace.domain.log.service;
 
-import com.devrace.config.TestAsyncConfig;
 import com.devrace.domain.log.controller.LogController;
 import com.devrace.domain.log.controller.dto.SubmitLogDto;
 import com.devrace.domain.log.controller.dto.SubmitLogResponseDto;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
