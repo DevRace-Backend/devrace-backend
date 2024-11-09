@@ -1,5 +1,6 @@
 package com.devrace.domain.log.entity;
 
+import com.devrace.domain.user.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -33,11 +34,16 @@ public class LogCount {
     private long continuousDays;
 
     private ZonedDateTime submitDate;
+    private ZonedDateTime countDate;
     private ZonedDateTime recentlyupdatedTime;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "log_id", nullable = false, unique = true)
     private Log log;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
 
     public void addTotalLogs(long newLogs) {
         this.totalLogs += newLogs;
