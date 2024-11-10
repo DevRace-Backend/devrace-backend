@@ -1,6 +1,7 @@
 package com.devrace.domain.log.entity;
 
 import com.devrace.domain.user.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,7 +38,7 @@ public class LogCount {
     private ZonedDateTime countDate;
     private ZonedDateTime recentlyupdatedTime;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "log_id", nullable = false, unique = true)
     private Log log;
 
