@@ -9,6 +9,7 @@ import com.devrace.domain.algorithm.solution.controller.dto.SubmitAlgorithmDto;
 import com.devrace.domain.algorithm.solution.controller.dto.SubmitAlgorithmResponseDto;
 import com.devrace.domain.algorithm.solution.entity.Solution;
 import com.devrace.domain.algorithm.solution.repository.AlgorithmRepository;
+import com.devrace.domain.event.AlgorithmSubmitEvent;
 import com.devrace.domain.log.entity.Log;
 import com.devrace.domain.user.entity.User;
 import com.devrace.domain.user.repository.UserRepository;
@@ -16,6 +17,7 @@ import com.devrace.global.exception.CustomException;
 import com.devrace.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,6 +30,7 @@ public class AlgorithmService {
     private final AlgorithmRepository algorithmRepository;
     private final UserRepository userRepository;
     private final ProblemRepository problemRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private static final List<String> ALLOWED_DOMAINS = List.of(
             "https://school.programmers.co.kr",
@@ -47,12 +50,14 @@ public class AlgorithmService {
                 .description(submitAlgorithmDto.getDescription())
                 .review(submitAlgorithmDto.getReview())
                 .isPublic(submitAlgorithmDto.isPublic())
-                .userId(userId)
                 .nickName(user.getNickname())
                 .problemId(problemId)
+                .user(user)
                 .build();
 
         algorithmRepository.save(solution);
+
+        applicationEventPublisher.publishEvent(new AlgorithmSubmitEvent(userId));
 
         return SubmitAlgorithmResponseDto.builder()
                 .id(solution.getId())
@@ -95,7 +100,7 @@ public class AlgorithmService {
 
     public AlgorithmResponseDto getAlgorithm(Long solutionId) {
         Solution solution = checkSolution(solutionId);
-        User user = checkUser(solution.getUserId());
+        User user = checkUser(solution.getUser().getId());
         Problem problem = problemRepository.findById(solution.getProblemId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PROBLEM_NOT_FOUND));
 

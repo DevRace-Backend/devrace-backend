@@ -4,6 +4,7 @@ import com.devrace.domain.log.controller.LogController;
 import com.devrace.domain.log.controller.dto.SubmitLogDto;
 import com.devrace.domain.log.controller.dto.SubmitLogResponseDto;
 import com.devrace.domain.log.entity.Log;
+import com.devrace.domain.log.repository.LogCountRepository;
 import com.devrace.domain.log.repository.LogRepository;
 import com.devrace.domain.user.entity.User;
 import com.devrace.domain.user.repository.UserRepository;
@@ -36,6 +37,9 @@ class LogServiceTest {
     private LogRepository logRepository;
 
     @Autowired
+    private LogCountRepository logCountRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     private User user;
@@ -48,7 +52,8 @@ class LogServiceTest {
 
     @AfterEach
     void clear() {
-        logRepository.deleteAll();
+        logCountRepository.deleteById(user.getId());
+        logRepository.deleteById(user.getId());
         userRepository.deleteAll();
     }
 
@@ -79,26 +84,6 @@ class LogServiceTest {
                     assertEquals(submitLogDto.getTitle(), saveLog.getTitle());
                     assertEquals(submitLogDto.getContent(), saveLog.getContent());
                 });
-
-
-
-//        SubmitLogResponseDto responseDto = SubmitLogResponseDto.builder()
-//                .status("성공")
-//                .message("성공")
-//                .logId(1L)
-//                .createdAt(ZonedDateTime.now(ZoneOffset.UTC))
-//                .address("https://asdasd.com")
-//                .build();
-//
-//        Mockito.when(logService.submitLog(any(SubmitLogDto.class), eq(1L))).thenReturn(responseDto);
-//
-//        ResponseEntity<SubmitLogResponseDto> response = logController.submitLog(1L, submitLogDto);
-//
-//        assertNotNull(response);
-//        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-//        assertEquals("성공", response.getBody().getStatus());
-//        verify(logService, times(1)).submitLog(any(SubmitLogDto.class), eq(1L));
-
     }
 
     private User createUser(String testNickname, String mail, String testGithubName) {

@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface AlgorithmRepository extends JpaRepository<Solution, Long> {
 
     Optional<Solution> findByIdAndUserId(Long solutionId, Long userId);
+
+    Optional<Solution> findByUserId(Long userId);
 }

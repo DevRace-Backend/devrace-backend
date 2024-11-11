@@ -1,5 +1,7 @@
 package com.devrace.domain.algorithm.solution.entity;
 
+import com.devrace.domain.user.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -33,11 +35,16 @@ public class AlgorithmCount {
     private long continuousDays;
 
     private ZonedDateTime submitDate;
+    private ZonedDateTime countDate;
     private ZonedDateTime recentlyUpdatedTime;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "solution_id", nullable = false, unique = true)
     private Solution solution;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
 
     public void addTotalSolutions(long newSolutions) {
         this.totalSolutions += newSolutions;

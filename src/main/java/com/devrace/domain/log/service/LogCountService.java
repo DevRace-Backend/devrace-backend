@@ -45,6 +45,7 @@ public class LogCountService {
                             .continuousDays(0)
                             .recentlyupdatedTime(ZonedDateTime.now(ZoneOffset.UTC))
                             .log(log)
+                            .user(user)
                             .build();
                     return logCountRepository.save(createLogCount);
                 });
