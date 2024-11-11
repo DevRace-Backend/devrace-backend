@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.IsoFields;
@@ -36,7 +37,7 @@ public class CommitHistoryScheduler {
          * -> 한달후로 이동.  1일 0시 0분 00초가 됨  -> -1 나노초  말일 23시 59분 59.999초가 됨
          * 이를 통해 1일 0시부터 말일 끝까지 커밋을 카운트 가능.  스케줄러가 돌아가는 동안 놓칠 커밋 갯수를 걱정하지 않아도 됨
          */
-        ZonedDateTime toDate = ZonedDateTime.now().minusMonths(1).withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS).plusMonths(1).minusNanos(1);
+        ZonedDateTime toDate = ZonedDateTime.now(ZoneOffset.UTC).minusMonths(1).withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS).plusMonths(1).minusNanos(1);
         ZonedDateTime fromDate = toDate.withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS);
 
         List<User> userList = userRepository.findAll();

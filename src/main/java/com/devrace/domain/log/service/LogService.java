@@ -1,5 +1,6 @@
 package com.devrace.domain.log.service;
 
+import com.devrace.domain.event.LogSubmitEvent;
 import com.devrace.domain.log.controller.dto.EditLogDto;
 import com.devrace.domain.log.controller.dto.EditLogResponseDto;
 import com.devrace.domain.log.controller.dto.LogResponseDto;
@@ -13,6 +14,7 @@ import com.devrace.global.exception.CustomException;
 import com.devrace.global.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +23,7 @@ public class LogService {
 
     private final LogRepository logRepository;
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
     public SubmitLogResponseDto submitLog(SubmitLogDto submitLogDto, Long userId) {
@@ -32,10 +35,12 @@ public class LogService {
                 .title(submitLogDto.getTitle())
                 .content(submitLogDto.getContent())
                 .isPublic(true) // 나중에 변경
-                .userId(user.getId())
+                .user(user)
                 .build();
 
         logRepository.save(log);
+
+        applicationEventPublisher.publishEvent(new LogSubmitEvent(userId));
 
         return SubmitLogResponseDto.builder()
                 .status("성공")
@@ -49,13 +54,14 @@ public class LogService {
     @Transactional
     public EditLogResponseDto editLog(Long logId, EditLogDto editLogDto, Long userId) {
         Log log = checkLog(logId, userId);
+        User user = checkUser(userId);
 
         log = Log.builder()
                 .address(editLogDto.getAddress())
                 .title(editLogDto.getTitle())
                 .content(editLogDto.getContent())
                 .isPublic(log.isPublic())
-                .userId(userId)
+                .user(user)
                 .build();
 
         logRepository.save(log);
