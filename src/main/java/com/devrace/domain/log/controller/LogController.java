@@ -166,9 +166,10 @@ public class LogController {
     })
     @GetMapping("/{logId}")
     public ResponseEntity<LogResponseDto> getLog(
+            @AuthenticationPrincipal Long userId,
             @PathVariable Long logId
     ) {
-        Log log = logService.getLogById(logId);
+        Log log = logService.getLogById(logId, userId);
         LogResponseDto responseDto = logService.createLogResponse(log);
         return ResponseEntity.ok(responseDto);
     }

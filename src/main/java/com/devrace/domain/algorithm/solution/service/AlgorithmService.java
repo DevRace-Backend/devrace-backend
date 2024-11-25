@@ -81,8 +81,7 @@ public class AlgorithmService {
         solution.update(
                 editAlgorithmDto.getDescription(),
                 editAlgorithmDto.getReview(),
-                problemId,
-                editAlgorithmDto.isPublic()
+                problemId
         );
 
         algorithmRepository.save(solution);
@@ -96,6 +95,19 @@ public class AlgorithmService {
                 .review(solution.getReview())
                 .isPublic(solution.isPublic())
                 .build();
+    }
+
+    @Transactional
+    public void changeAlgorithmVisibility(Long userId, Long solutionId) {
+        checkUser(userId);
+        Solution solution = checkSolution(solutionId);
+
+        if (!solution.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+
+        solution.changeIsPublic();
+        algorithmRepository.save(solution);
     }
 
     public AlgorithmResponseDto getAlgorithm(Long solutionId) {

@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -56,10 +57,14 @@ public class Solution extends BaseTimeEntity {
         this.problemId = problemId;
     }
 
-    public void update(String description, String review, Long problemId, boolean isPublic) {
+    public void update(String description, String review, Long problemId) {
         this.description = description;
         this.review = review;
         this.problemId = problemId;
-        this.isPublic = isPublic;
+    }
+
+    @Transactional
+    public void changeIsPublic() {
+        isPublic = !isPublic;
     }
 }

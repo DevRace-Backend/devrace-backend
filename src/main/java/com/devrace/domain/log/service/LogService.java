@@ -87,16 +87,19 @@ public class LogService {
         logRepository.save(log);
     }
 
-    public Log getLogById(Long logId) {
+    public Log getLogById(Long logId, Long userId) {
+        checkUser(userId);
         Log log = checkLog(logId);
+
+        boolean isOwner = log.getUser().getId().equals(userId);
 
         CategoryVisibility categoryVisibility = getCategoryVisibility(log.getUser().getId());
 
-        if (!categoryVisibility.isPublic()) {
+        if (!categoryVisibility.isPublic() && !isOwner) {
             throw new CustomException(ErrorCode.CATEGORY_IS_PRIVATE);
         }
 
-        if (!log.isPublic()) {
+        if (!log.isPublic() && !isOwner) {
             throw new CustomException(ErrorCode.LOG_IS_PRIVATE);
         }
 
