@@ -9,6 +9,9 @@ import com.devrace.domain.algorithm.solution.controller.dto.SubmitAlgorithmDto;
 import com.devrace.domain.algorithm.solution.controller.dto.SubmitAlgorithmResponseDto;
 import com.devrace.domain.algorithm.solution.entity.Solution;
 import com.devrace.domain.algorithm.solution.repository.AlgorithmRepository;
+import com.devrace.domain.category_visibility.entity.CategoryVisibility;
+import com.devrace.domain.category_visibility.enums.CategoryType;
+import com.devrace.domain.category_visibility.repository.CategoryVisibilityRepository;
 import com.devrace.domain.event.AlgorithmSubmitEvent;
 import com.devrace.domain.log.entity.Log;
 import com.devrace.domain.user.entity.User;
@@ -30,6 +33,7 @@ public class AlgorithmService {
     private final AlgorithmRepository algorithmRepository;
     private final UserRepository userRepository;
     private final ProblemRepository problemRepository;
+    private final CategoryVisibilityRepository categoryVisibilityRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     private static final List<String> ALLOWED_DOMAINS = List.of(
@@ -110,11 +114,23 @@ public class AlgorithmService {
         algorithmRepository.save(solution);
     }
 
-    public AlgorithmResponseDto getAlgorithm(Long solutionId) {
+    public AlgorithmResponseDto getAlgorithm(Long solutionId, Long userId) {
         Solution solution = checkSolution(solutionId);
         User user = checkUser(solution.getUser().getId());
         Problem problem = problemRepository.findById(solution.getProblemId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PROBLEM_NOT_FOUND));
+
+        boolean isOwner = solution.getUser().getId().equals(userId);
+
+        CategoryVisibility categoryVisibility = getCategoryVisibility(solution.getUser().getId());
+
+        if (!categoryVisibility.isPublic() && !isOwner) {
+            throw new CustomException(ErrorCode.CATEGORY_IS_PRIVATE);
+        }
+
+        if (!solution.isPublic() && !isOwner) {
+            throw new CustomException(ErrorCode.ALGORITHM_IS_PRIVATE);
+        }
 
         return AlgorithmResponseDto.builder()
                 .solutionId(solutionId)
@@ -168,5 +184,11 @@ public class AlgorithmService {
     private Solution checkSolution(Long solutionId) {
         return algorithmRepository.findById(solutionId)
                 .orElseThrow(() -> new CustomException((ErrorCode.SOLUTION_NOT_FOUND)));
+    }
+
+    private CategoryVisibility getCategoryVisibility(Long userId) {
+        CategoryVisibility categoryVisibility = categoryVisibilityRepository.findByUserIdAndType(userId, CategoryType.ALGORITHM)
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_VISIBILITY_NOT_FOUND));
+        return categoryVisibility;
     }
 }

@@ -130,9 +130,10 @@ public class AlgorithmController {
     })
     @GetMapping("/{solutionId}")
     public ResponseEntity<AlgorithmResponseDto> getAlgorithm(
+            @AuthenticationPrincipal Long userId,
             @Parameter(description = "조회할 솔루션ID", required = true) @PathVariable Long solutionId) {
 
-        AlgorithmResponseDto responseDto = algorithmService.getAlgorithm(solutionId);
+        AlgorithmResponseDto responseDto = algorithmService.getAlgorithm(solutionId, userId);
 
         return ResponseEntity.ok(responseDto);
     }

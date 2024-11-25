@@ -19,6 +19,7 @@ public enum ErrorCode {
     INVALID_PAGE_OR_SIZE(400,  "유효하지 않은 페이지입니다."),
     CATEGORY_IS_PRIVATE(400, "비공개 카테고리 입니다."),
     LOG_IS_PRIVATE(400, "비공개 개발일지 게시물 입니다."),
+    ALGORITHM_IS_PRIVATE(400, "비공개 개발일지 게시물 입니다."),
 
     /*  401 UNAUTHORIZED : 인증 안됨  */
     UNAUTHORIZED(401, "인증되지 않았습니다."),
