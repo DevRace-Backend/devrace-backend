@@ -17,6 +17,9 @@ public enum ErrorCode {
     EXPIRED_TOKEN(400, "만료된 토큰입니다."),
     INVALID_BLOG_ADDRESS(400,  "블로그 주소는 https://를 포함한 최소 8글자 이상으로 입력해 주세요."),
     INVALID_PAGE_OR_SIZE(400,  "유효하지 않은 페이지입니다."),
+    CATEGORY_IS_PRIVATE(400, "비공개 카테고리 입니다."),
+    LOG_IS_PRIVATE(400, "비공개 개발일지 게시물 입니다."),
+    ALGORITHM_IS_PRIVATE(400, "비공개 개발일지 게시물 입니다."),
 
     /*  401 UNAUTHORIZED : 인증 안됨  */
     UNAUTHORIZED(401, "인증되지 않았습니다."),

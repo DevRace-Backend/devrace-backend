@@ -1,5 +1,8 @@
 package com.devrace.domain.log.service;
 
+import com.devrace.domain.category_visibility.entity.CategoryVisibility;
+import com.devrace.domain.category_visibility.enums.CategoryType;
+import com.devrace.domain.category_visibility.repository.CategoryVisibilityRepository;
 import com.devrace.domain.event.LogSubmitEvent;
 import com.devrace.domain.log.controller.dto.EditLogDto;
 import com.devrace.domain.log.controller.dto.EditLogResponseDto;
@@ -23,6 +26,7 @@ public class LogService {
 
     private final LogRepository logRepository;
     private final UserRepository userRepository;
+    private final CategoryVisibilityRepository categoryVisibilityRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
@@ -34,7 +38,7 @@ public class LogService {
                 .address(submitLogDto.getAddress())
                 .title(submitLogDto.getTitle())
                 .content(submitLogDto.getContent())
-                .isPublic(true) // 나중에 변경
+                .isPublic(submitLogDto.isPublic())
                 .user(user)
                 .build();
 
@@ -48,6 +52,7 @@ public class LogService {
                 .logId(log.getId())
                 .createdAt(log.getCreatedAt())
                 .address(log.getAddress())
+                .isPublic(log.isPublic())
                 .build();
     }
 
@@ -56,13 +61,7 @@ public class LogService {
         Log log = checkLog(logId, userId);
         User user = checkUser(userId);
 
-        log = Log.builder()
-                .address(editLogDto.getAddress())
-                .title(editLogDto.getTitle())
-                .content(editLogDto.getContent())
-                .isPublic(log.isPublic())
-                .user(user)
-                .build();
+        log.editLog(editLogDto);
 
         logRepository.save(log);
 
@@ -71,13 +70,47 @@ public class LogService {
                 .message("성공적으로 수정되었습니다.")
                 .logId(logId)
                 .address(log.getAddress())
+                .isPublic(log.isPublic())
                 .build();
     }
 
-    public Log getLogById(Long logId) {
-        return logRepository.findById(logId)
-                .orElseThrow(() -> new CustomException((ErrorCode.LOG_NOT_FOUND)));
+    @Transactional
+    public void changeLogVisibility(Long userId, Long logId) {
+        checkUser(userId);
+        Log log = checkLog(logId);
+
+        if (!log.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+
+        log.changeIsPublic();
+        logRepository.save(log);
     }
+
+    public Log getLogById(Long logId, Long userId) {
+        boolean isLogIn = userId != null;
+
+        if (isLogIn) {
+            checkUser(userId);
+        }
+
+        Log log = checkLog(logId);
+
+        boolean isOwner = isLogIn && log.getUser().getId().equals(userId);
+
+        CategoryVisibility categoryVisibility = getCategoryVisibility(log.getUser().getId());
+
+        if (!categoryVisibility.isPublic() && !isOwner) {
+            throw new CustomException(ErrorCode.CATEGORY_IS_PRIVATE);
+        }
+
+        if (!log.isPublic() && !isOwner) {
+            throw new CustomException(ErrorCode.LOG_IS_PRIVATE);
+        }
+
+        return log;
+    }
+
     public LogResponseDto createLogResponse(Log log) {
         return LogResponseDto.builder()
                 .logId(log.getId())
@@ -96,6 +129,18 @@ public class LogService {
 
         return logRepository.findByIdAndUserId(logId, userId)
                 .orElseThrow(() -> new CustomException((ErrorCode.LOG_NOT_FOUND)));
+    }
+
+    private Log checkLog(Long logId) {
+
+        return logRepository.findById(logId)
+                .orElseThrow(() -> new CustomException((ErrorCode.LOG_NOT_FOUND)));
+    }
+
+    private CategoryVisibility getCategoryVisibility(Long userId) {
+        CategoryVisibility categoryVisibility = categoryVisibilityRepository.findByUserIdAndType(userId, CategoryType.LOG)
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_VISIBILITY_NOT_FOUND));
+        return categoryVisibility;
     }
 
     public boolean isDuplicatedLink(String address, Long userId) {

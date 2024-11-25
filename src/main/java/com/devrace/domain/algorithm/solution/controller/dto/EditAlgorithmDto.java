@@ -10,5 +10,4 @@ public class EditAlgorithmDto {
     private String title;
     private String description;
     private String review;
-    private boolean isPublic;
 }

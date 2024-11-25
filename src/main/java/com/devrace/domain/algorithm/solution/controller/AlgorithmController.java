@@ -89,6 +89,31 @@ public class AlgorithmController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @Operation(summary = "알고리즘 공개비공개 변경", description = "알고리즘 공개비공개 변경 API")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "No Content"),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "유저를 찾을 수 없습니다. 또는 제출된 알고리즘 풀이를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            )
+    })
+    @PatchMapping("/edit/{solutionId}/visible")
+    public ResponseEntity<Void> changeSolutionVisibility(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long solutionId
+    ) {
+        algorithmService.changeAlgorithmVisibility(userId, solutionId);
+        return ResponseEntity.noContent().build();
+    }
+
 
     @Operation(summary = "알고리즘 단건 조회", description = "알고리즘 단건 조회 API")
     @ApiResponses(value = {
@@ -105,9 +130,10 @@ public class AlgorithmController {
     })
     @GetMapping("/{solutionId}")
     public ResponseEntity<AlgorithmResponseDto> getAlgorithm(
+            @AuthenticationPrincipal Long userId,
             @Parameter(description = "조회할 솔루션ID", required = true) @PathVariable Long solutionId) {
 
-        AlgorithmResponseDto responseDto = algorithmService.getAlgorithm(solutionId);
+        AlgorithmResponseDto responseDto = algorithmService.getAlgorithm(solutionId, userId);
 
         return ResponseEntity.ok(responseDto);
     }

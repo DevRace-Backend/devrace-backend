@@ -18,4 +18,5 @@ public class SubmitLogResponseDto {
     private final Long logId;
     private final ZonedDateTime createdAt;
     private final String address;
+    private final boolean isPublic;
 }
