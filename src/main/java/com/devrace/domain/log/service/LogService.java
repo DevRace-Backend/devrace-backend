@@ -1,5 +1,8 @@
 package com.devrace.domain.log.service;
 
+import com.devrace.domain.category_visibility.entity.CategoryVisibility;
+import com.devrace.domain.category_visibility.enums.CategoryType;
+import com.devrace.domain.category_visibility.repository.CategoryVisibilityRepository;
 import com.devrace.domain.event.LogSubmitEvent;
 import com.devrace.domain.log.controller.dto.EditLogDto;
 import com.devrace.domain.log.controller.dto.EditLogResponseDto;
@@ -23,6 +26,7 @@ public class LogService {
 
     private final LogRepository logRepository;
     private final UserRepository userRepository;
+    private final CategoryVisibilityRepository categoryVisibilityRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
@@ -71,9 +75,21 @@ public class LogService {
     }
 
     public Log getLogById(Long logId) {
-        return logRepository.findById(logId)
-                .orElseThrow(() -> new CustomException((ErrorCode.LOG_NOT_FOUND)));
+        Log log = checkLog(logId);
+
+        CategoryVisibility categoryVisibility = getCategoryVisibility(log.getUser().getId());
+
+        if (!categoryVisibility.isPublic()) {
+            throw new CustomException(ErrorCode.CATEGORY_IS_PRIVATE);
+        }
+
+        if (!log.isPublic()) {
+            throw new CustomException(ErrorCode.LOG_IS_PRIVATE);
+        }
+
+        return log;
     }
+
     public LogResponseDto createLogResponse(Log log) {
         return LogResponseDto.builder()
                 .logId(log.getId())
@@ -92,6 +108,18 @@ public class LogService {
 
         return logRepository.findByIdAndUserId(logId, userId)
                 .orElseThrow(() -> new CustomException((ErrorCode.LOG_NOT_FOUND)));
+    }
+
+    private Log checkLog(Long logId) {
+
+        return logRepository.findById(logId)
+                .orElseThrow(() -> new CustomException((ErrorCode.LOG_NOT_FOUND)));
+    }
+
+    private CategoryVisibility getCategoryVisibility(Long userId) {
+        CategoryVisibility categoryVisibility = categoryVisibilityRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_VISIBILITY_NOT_FOUND));
+        return categoryVisibility;
     }
 
     public boolean isDuplicatedLink(String address, Long userId) {

@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface CategoryVisibilityRepository extends JpaRepository<CategoryVisibility, Long> {
 
     Optional<CategoryVisibility> findByIdAndType(Long userId, CategoryType categoryType);
+
+    Optional<CategoryVisibility> findByUserId(Long userId);
 }
