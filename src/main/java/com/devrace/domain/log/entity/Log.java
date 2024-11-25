@@ -61,7 +61,11 @@ public class Log extends BaseTimeEntity {
         this.address = Optional.ofNullable(editLogDto.getAddress()).orElse(this.address);
         this.title = Optional.ofNullable(editLogDto.getTitle()).orElse(this.title);
         this.content = Optional.ofNullable(editLogDto.getContent()).orElse(this.content);
-        this.isPublic = Optional.ofNullable(editLogDto.getIsPublic()).orElse(this.isPublic);
+    }
+
+    @Transactional
+    public void changeIsPublic() {
+        isPublic = !isPublic;
     }
 
 

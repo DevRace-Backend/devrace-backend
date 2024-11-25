@@ -10,6 +10,5 @@ public class  EditLogDto {
         private String address;
         private String title;
         private String content;
-        private Boolean isPublic;
 
 }

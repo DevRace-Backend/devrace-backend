@@ -74,6 +74,19 @@ public class LogService {
                 .build();
     }
 
+    @Transactional
+    public void changeLogVisibility(Long userId, Long logId) {
+        checkUser(userId);
+        Log log = checkLog(logId);
+
+        if (!log.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN);
+        }
+
+        log.changeIsPublic();
+        logRepository.save(log);
+    }
+
     public Log getLogById(Long logId) {
         Log log = checkLog(logId);
 
@@ -117,7 +130,7 @@ public class LogService {
     }
 
     private CategoryVisibility getCategoryVisibility(Long userId) {
-        CategoryVisibility categoryVisibility = categoryVisibilityRepository.findByUserId(userId)
+        CategoryVisibility categoryVisibility = categoryVisibilityRepository.findByUserIdAndType(userId, CategoryType.LOG)
                 .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_VISIBILITY_NOT_FOUND));
         return categoryVisibility;
     }

@@ -10,5 +10,5 @@ public interface CategoryVisibilityRepository extends JpaRepository<CategoryVisi
 
     Optional<CategoryVisibility> findByIdAndType(Long userId, CategoryType categoryType);
 
-    Optional<CategoryVisibility> findByUserId(Long userId);
+    Optional<CategoryVisibility> findByUserIdAndType(Long userId, CategoryType categoryType);
 }

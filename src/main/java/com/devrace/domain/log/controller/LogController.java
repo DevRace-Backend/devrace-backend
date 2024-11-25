@@ -8,6 +8,7 @@ import com.devrace.domain.log.controller.dto.SubmitLogDto;
 import com.devrace.domain.log.controller.dto.SubmitLogResponseDto;
 import com.devrace.domain.log.entity.Log;
 import com.devrace.domain.log.service.LogService;
+import com.devrace.domain.user.entity.User;
 import com.devrace.global.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -118,6 +120,31 @@ public class LogController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(successResponse);
 
+    }
+
+    @Operation(summary = "개발일지(로그) 공개비공개 변경", description = "개발일지(로그) 공개비공개 변경 API")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "No Content"),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "유저를 찾을 수 없습니다. 또는 로그를 찾을 수 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+            )
+    })
+    @PatchMapping("/edit/{logId}/visible")
+    public ResponseEntity<Void> changeLogVisibility(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long logId
+    ) {
+        logService.changeLogVisibility(userId, logId);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "개발일지(로그) 단건 조회", description = "개발일지(로그) 단건 조회 API")
