@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/api/v1/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/algorithm/**", "/api/v1/algorithm/comment/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/log/**").permitAll()
                         .anyRequest().authenticated())
 
                 .oauth2Login(oauth2 -> oauth2

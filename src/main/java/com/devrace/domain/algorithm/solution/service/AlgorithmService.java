@@ -115,12 +115,14 @@ public class AlgorithmService {
     }
 
     public AlgorithmResponseDto getAlgorithm(Long solutionId, Long userId) {
+        boolean isLogIn = userId != null;
+
         Solution solution = checkSolution(solutionId);
         User user = checkUser(solution.getUser().getId());
         Problem problem = problemRepository.findById(solution.getProblemId())
                 .orElseThrow(() -> new CustomException(ErrorCode.PROBLEM_NOT_FOUND));
 
-        boolean isOwner = solution.getUser().getId().equals(userId);
+        boolean isOwner = isLogIn && solution.getUser().getId().equals(userId);
 
         CategoryVisibility categoryVisibility = getCategoryVisibility(solution.getUser().getId());
 

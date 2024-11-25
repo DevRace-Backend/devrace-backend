@@ -88,10 +88,15 @@ public class LogService {
     }
 
     public Log getLogById(Long logId, Long userId) {
-        checkUser(userId);
+        boolean isLogIn = userId != null;
+
+        if (isLogIn) {
+            checkUser(userId);
+        }
+
         Log log = checkLog(logId);
 
-        boolean isOwner = log.getUser().getId().equals(userId);
+        boolean isOwner = isLogIn && log.getUser().getId().equals(userId);
 
         CategoryVisibility categoryVisibility = getCategoryVisibility(log.getUser().getId());
 
