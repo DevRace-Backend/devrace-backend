@@ -7,8 +7,9 @@ import lombok.Getter;
 @Builder
 public class  EditLogDto {
 
-        private final String address;
-        private final String title;
-        private final String content;
+        private String address;
+        private String title;
+        private String content;
+        private Boolean isPublic;
 
 }

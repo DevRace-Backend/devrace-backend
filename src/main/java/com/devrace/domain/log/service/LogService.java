@@ -34,7 +34,7 @@ public class LogService {
                 .address(submitLogDto.getAddress())
                 .title(submitLogDto.getTitle())
                 .content(submitLogDto.getContent())
-                .isPublic(true) // 나중에 변경
+                .isPublic(submitLogDto.isPublic())
                 .user(user)
                 .build();
 
@@ -48,6 +48,7 @@ public class LogService {
                 .logId(log.getId())
                 .createdAt(log.getCreatedAt())
                 .address(log.getAddress())
+                .isPublic(log.isPublic())
                 .build();
     }
 
@@ -56,13 +57,7 @@ public class LogService {
         Log log = checkLog(logId, userId);
         User user = checkUser(userId);
 
-        log = Log.builder()
-                .address(editLogDto.getAddress())
-                .title(editLogDto.getTitle())
-                .content(editLogDto.getContent())
-                .isPublic(log.isPublic())
-                .user(user)
-                .build();
+        log.editLog(editLogDto);
 
         logRepository.save(log);
 
@@ -71,6 +66,7 @@ public class LogService {
                 .message("성공적으로 수정되었습니다.")
                 .logId(logId)
                 .address(log.getAddress())
+                .isPublic(log.isPublic())
                 .build();
     }
 

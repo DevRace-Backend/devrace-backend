@@ -12,4 +12,5 @@ public class EditLogResponseDto {
     private final String message;
     private final Long logId;
     private final String address;
+    private final boolean isPublic;
 }

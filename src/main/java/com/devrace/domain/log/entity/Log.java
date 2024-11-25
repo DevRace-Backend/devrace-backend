@@ -1,5 +1,7 @@
 package com.devrace.domain.log.entity;
 
+import com.devrace.domain.log.controller.dto.EditLogDto;
+import com.devrace.domain.log.controller.dto.EditLogResponseDto;
 import com.devrace.domain.user.entity.User;
 import com.devrace.global.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
@@ -14,8 +16,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -51,5 +55,14 @@ public class Log extends BaseTimeEntity {
         this.isPublic = isPublic;
         this.user = user;
     }
+
+    @Transactional
+    public void editLog(EditLogDto editLogDto) {
+        this.address = Optional.ofNullable(editLogDto.getAddress()).orElse(this.address);
+        this.title = Optional.ofNullable(editLogDto.getTitle()).orElse(this.title);
+        this.content = Optional.ofNullable(editLogDto.getContent()).orElse(this.content);
+        this.isPublic = Optional.ofNullable(editLogDto.getIsPublic()).orElse(this.isPublic);
+    }
+
 
 }
