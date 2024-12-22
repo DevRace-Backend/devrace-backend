@@ -1,34 +1,46 @@
 package com.devrace.domain.user.service;
 
-import static com.devrace.global.exception.ErrorCode.ALREADY_EXIST_NICKNAME;
-import static com.devrace.global.exception.ErrorCode.USER_NOT_FOUND;
+import static com.devrace.global.exception.ErrorCode.*;
 
+import java.util.Optional;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.devrace.domain.category_visibility.service.CategoryVisibilityService;
+import com.devrace.domain.social_account.entity.SocialAccount;
+import com.devrace.domain.social_account.service.SocialAccountService;
 import com.devrace.domain.user.controller.dto.request.BlogAddressUpdateRequest;
 import com.devrace.domain.user.controller.dto.request.DescriptionUpdateRequest;
 import com.devrace.domain.user.controller.dto.request.NicknameUpdateRequest;
+import com.devrace.domain.user.controller.dto.response.LoginResponse;
 import com.devrace.domain.user.controller.dto.response.MyInfoResponse;
 import com.devrace.domain.user.controller.dto.response.UserInfoResponse;
 import com.devrace.domain.user.entity.User;
 import com.devrace.domain.user.generator.NicknameGenerator;
 import com.devrace.domain.user.repository.UserRepository;
+import com.devrace.global.config.jwt.JwtTokenProvider;
 import com.devrace.global.config.oauth.provider.OAuth2UserInfo;
+import com.devrace.global.config.oauth.provider.ProviderType;
 import com.devrace.global.exception.CustomException;
-import java.util.Optional;
+import com.devrace.global.util.CookieUtils;
+import com.devrace.global.util.SocialLoginService;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
+    private final SocialLoginService socialLoginService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final SocialAccountService socialAccountService;
+    private final CategoryVisibilityService categoryVisibilityService;
     private final UserRepository userRepository;
 
-    @Transactional
-    public User createUser(OAuth2UserInfo userInfo) {
-        String uniqueNickname = getUniqueNickname(userInfo.getName());
-        return userRepository.save(User.create(userInfo, uniqueNickname));
-    }
 
     @Transactional(readOnly = true)
     public Optional<User> findUserByEmail(String email) {
@@ -68,11 +80,19 @@ public class UserService {
         user.changeBlogAddress(request.getBlogAddress());
     }
 
-    private String getUniqueNickname(String nickname) {
-        while (isNotUniqueNickname(nickname)) {
-            nickname = NicknameGenerator.generateRandomNickname();
-        }
-        return nickname;
+    public LoginResponse login(ProviderType providerType, String code, HttpServletResponse response) {
+        JsonNode jsonNode = socialLoginService.getOAuthResponse(providerType, code);
+
+        String token = socialLoginService.extractToken(jsonNode);
+        OAuth2UserInfo oAuth2UserInfo = socialLoginService.getUserInfo(providerType, token);
+
+        User user = getUser(oAuth2UserInfo);
+        String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getRole().getAuthority());
+        String refreshToken = jwtTokenProvider.createRefreshToken();
+
+        response.addHeader(HttpHeaders.AUTHORIZATION, accessToken);
+        CookieUtils.addRefreshToken(response, refreshToken);
+        return LoginResponse.from(user);
     }
 
     @Transactional(readOnly = true)
@@ -85,6 +105,31 @@ public class UserService {
     public User getUserByNickname(String nickname) {
         return userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    }
+
+    public User getUser(OAuth2UserInfo userInfo) {
+        return socialAccountService.findSocialAccountByProvider(
+                userInfo.getProviderType(), userInfo.getProviderId())
+            .map(SocialAccount::getUser)
+            .orElseGet(() -> {
+                User user = findUserByEmail(userInfo.getEmail())
+                    .orElseGet(() -> {
+                        User newUser = userRepository.save(
+                            User.create(userInfo, getUniqueNickname(userInfo.getName())));
+                        categoryVisibilityService.createCategoryVisibility(newUser);
+                        return newUser;
+                    });
+
+                socialAccountService.createSocialAccount(userInfo, user);
+                return user;
+            });
+    }
+
+    private String getUniqueNickname(String nickname) {
+        while (isNotUniqueNickname(nickname)) {
+            nickname = NicknameGenerator.generateRandomNickname();
+        }
+        return nickname;
     }
 
     @Transactional(readOnly = true)
