@@ -1,8 +1,8 @@
 package com.devrace.domain.social_account.entity;
 
 import com.devrace.domain.user.entity.User;
-import com.devrace.global.config.oauth.provider.ProviderType;
 import com.devrace.global.config.oauth.provider.OAuth2UserInfo;
+import com.devrace.global.config.oauth.provider.ProviderType;
 import com.devrace.global.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
