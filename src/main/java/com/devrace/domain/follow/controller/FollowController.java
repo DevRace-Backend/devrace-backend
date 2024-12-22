@@ -46,8 +46,10 @@ public class FollowController {
             )
     })
     @PostMapping("/follow")
-    public ResponseEntity<FollowingResponseDto> followUser(@RequestBody FollowDto followDto) {
-        FollowingResponseDto responseDto = followService.followUser(followDto);
+    public ResponseEntity<FollowingResponseDto> followUser(
+        @RequestBody FollowDto followDto,
+        @AuthenticationPrincipal Long userId) {
+        FollowingResponseDto responseDto = followService.followUser(followDto, userId);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -64,8 +66,10 @@ public class FollowController {
             )
     })
     @DeleteMapping("/unfollow")
-    public ResponseEntity<Void> unfollowUser(@RequestBody FollowDto followDto) {
-        followService.unfollowUser(followDto);
+    public ResponseEntity<Void> unfollowUser(
+        @RequestBody FollowDto followDto,
+        @AuthenticationPrincipal Long userId) {
+        followService.unfollowUser(followDto, userId);
         return ResponseEntity.noContent().build();
     }
 

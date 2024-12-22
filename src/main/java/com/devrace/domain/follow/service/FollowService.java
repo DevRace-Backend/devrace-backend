@@ -32,8 +32,12 @@ public class FollowService {
     private final CategoryVisibilityRepository categoryVisibilityRepository;
 
     @Transactional
-    public FollowingResponseDto followUser(FollowDto followDto) {
-        User follower = getUser(followDto.getFollowerId());
+    public FollowingResponseDto followUser(FollowDto followDto, Long userId) {
+        if (!userId.equals(followDto.getFollowerId())) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        User follower = getUser(userId);
 
         User following = getUser(followDto.getFollowingId());
 
@@ -62,7 +66,11 @@ public class FollowService {
     }
 
     @Transactional
-    public void unfollowUser(FollowDto followDto) {
+    public void unfollowUser(FollowDto followDto, Long userId) {
+        if (!userId.equals(followDto.getFollowerId())) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
         User follower = userRepository.findById(followDto.getFollowerId())
                 .orElseThrow(() -> new CustomException(ErrorCode.FOLLOWER_NOT_FOUND));
 

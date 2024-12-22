@@ -70,7 +70,7 @@ class FollowServiceTest {
     void followUser() {
         FollowDto followDto = new FollowDto(user1.getId(), user2.getId());
 
-        followService.followUser(followDto);
+        followService.followUser(followDto, user1.getId());
 
         assertThat(followerRepository.findByFollowerAndFollowing(user1, user2)).isPresent();
         assertThat(followingRepository.findByFollowerAndFollowing(user1, user2)).isPresent();
@@ -80,8 +80,8 @@ class FollowServiceTest {
     void unfollowUser() {
         FollowDto followDto = new FollowDto(user1.getId(), user2.getId());
 
-        followService.followUser(followDto);
-        followService.unfollowUser(followDto);
+        followService.followUser(followDto, user1.getId());
+        followService.unfollowUser(followDto, user1.getId());
 
         assertThat(followerRepository.findByFollowerAndFollowing(user1, user2)).isNotPresent();
         assertThat(followingRepository.findByFollowerAndFollowing(user1, user2)).isNotPresent();
@@ -92,7 +92,7 @@ class FollowServiceTest {
     void getFollowerList() {
         FollowDto followDto = new FollowDto(user2.getId(), user1.getId());
 
-        followService.followUser(followDto);
+        followService.followUser(followDto, user2.getId());
 
         List<?> followerList = followService.getFollowerList(user1.getId(), user1.getId());
 
@@ -104,7 +104,7 @@ class FollowServiceTest {
     @DisplayName("내가 다른 사람 팔로워리스트 봄")
     void getFollowerListOtherPeople() {
         FollowDto followDto = new FollowDto(user2.getId(), user3.getId());
-        followService.followUser(followDto);
+        followService.followUser(followDto, user2.getId());
 
         List<?> followerList = followService.getFollowerList(user1.getId(), user3.getId());
 
@@ -116,7 +116,7 @@ class FollowServiceTest {
     @DisplayName("내가 내 팔로잉리스트 봄")
     void getFollowingList() {
         FollowDto followDto = new FollowDto(user1.getId(), user2.getId());
-        followService.followUser(followDto);
+        followService.followUser(followDto, user1.getId());
 
         List<?> followingList = followService.getFollowingList(user1.getId(), user1.getId());
 
@@ -128,7 +128,7 @@ class FollowServiceTest {
     @DisplayName("내가 다른 사람 팔로잉리스트 봄")
     void getFollowingListOtherPeople() {
         FollowDto followDto = new FollowDto(user3.getId(), user2.getId());
-        followService.followUser(followDto);
+        followService.followUser(followDto, user3.getId());
 
         List<?> followingList = followService.getFollowingList(user1.getId(), user3.getId());
 
