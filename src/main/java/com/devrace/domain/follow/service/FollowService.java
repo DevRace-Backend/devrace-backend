@@ -8,8 +8,8 @@ import com.devrace.domain.follow.controller.dto.FollowerResponseDto;
 import com.devrace.domain.follow.controller.dto.FollowingResponseDto;
 import com.devrace.domain.follow.entity.Follower;
 import com.devrace.domain.follow.entity.Following;
-import com.devrace.domain.follow.repository.FollowerRepository;
-import com.devrace.domain.follow.repository.FollowingRepository;
+import com.devrace.domain.follow.repository.follower.FollowerRepository;
+import com.devrace.domain.follow.repository.following.FollowingRepository;
 import com.devrace.domain.user.entity.User;
 import com.devrace.domain.user.repository.UserRepository;
 import com.devrace.global.exception.CustomException;
@@ -149,6 +149,23 @@ public class FollowService {
                 ).toList();
     }
 
+    public List<FollowerResponseDto> searchFollower(String nickname, Long myUserId, Long targetUserId) {
+        User targetUser = getUser(targetUserId);
+        User my = getUser(myUserId);
+
+        List<Follower> followerList = followerRepository.searchFollower(nickname, targetUser.getId());
+
+        return followerList.stream()
+            .map(follower -> FollowerResponseDto.builder()
+                .id(follower.getId())
+                .followerNickname(follower.getFollower().getNickname())
+                .imageUrl(follower.getFollower().getImageUrl())
+                .description(follower.getFollower().getDescription())
+                .isFollowing(checkFollowEachOther(my, follower.getFollower()))
+                .build())
+            .toList();
+    }
+
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -164,7 +181,7 @@ public class FollowService {
     }
 
     private CategoryVisibility getCategoryVisibility(Long userId) {
-        CategoryVisibility categoryVisibility = categoryVisibilityRepository.findByIdAndType(userId, CategoryType.FOLLOW)
+        CategoryVisibility categoryVisibility = categoryVisibilityRepository.findByUserIdAndType(userId, CategoryType.FOLLOW)
                 .orElseThrow(() -> new CustomException(ErrorCode.CATEGORY_VISIBILITY_NOT_FOUND));
         return categoryVisibility;
     }
