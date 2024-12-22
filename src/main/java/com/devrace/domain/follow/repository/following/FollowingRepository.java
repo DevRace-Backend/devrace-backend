@@ -1,4 +1,4 @@
-package com.devrace.domain.follow.repository;
+package com.devrace.domain.follow.repository.following;
 
 import com.devrace.domain.follow.entity.Following;
 import com.devrace.domain.user.entity.User;

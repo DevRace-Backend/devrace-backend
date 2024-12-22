@@ -4,11 +4,11 @@ import com.devrace.domain.category_visibility.entity.CategoryVisibility;
 import com.devrace.domain.category_visibility.enums.CategoryType;
 import com.devrace.domain.category_visibility.repository.CategoryVisibilityRepository;
 import com.devrace.domain.follow.controller.dto.FollowDto;
-import com.devrace.domain.follow.repository.FollowerRepository;
-import com.devrace.domain.follow.repository.FollowingRepository;
+import com.devrace.domain.follow.repository.follower.FollowerRepository;
+import com.devrace.domain.follow.repository.following.FollowingRepository;
 import com.devrace.domain.user.entity.User;
 import com.devrace.domain.user.repository.UserRepository;
-import jakarta.persistence.EntityManager;
+
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

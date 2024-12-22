@@ -1,5 +1,6 @@
 package com.devrace.domain.follow.controller.dto;
 
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,5 +10,6 @@ public class FollowerResponseDto {
     private Long id;
     private String followerNickname;
     private String imageUrl;
+    private String description;
     private Boolean isFollowing;
 }
