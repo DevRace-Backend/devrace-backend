@@ -40,6 +40,6 @@ public class FollowerRepositoryCustomImpl implements FollowerRepositoryCustom{
 	}
 
 	private BooleanExpression followingUser(Long userId) {
-		return follower1.follower.id.eq(userId);
+		return follower1.following.id.eq(userId);
 	}
 }

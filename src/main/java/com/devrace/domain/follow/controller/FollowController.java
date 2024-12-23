@@ -125,6 +125,18 @@ public class FollowController {
         return ResponseEntity.ok(followingList);
     }
 
+    @Operation(summary = "팔로워 검색", description = "팔로워 검색 API")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "검색 성공.",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = FollowerResponseDto.class)))),
+        @ApiResponse(
+            responseCode = "404",
+            description = "유저를 찾을 수 없습니다.",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        )
+    })
     @GetMapping("/search/follower")
     public ResponseEntity<List<FollowerResponseDto>> searchFollower(
         @RequestParam(required = false) String nickname,
@@ -132,6 +144,28 @@ public class FollowController {
         @RequestParam Long targetUserId
     ) {
         List<FollowerResponseDto> responseDtoList = followService.searchFollower(nickname, myUserId, targetUserId);
+        return ResponseEntity.ok(responseDtoList);
+    }
+
+    @Operation(summary = "팔로잉 검색", description = "팔로잉 검색 API")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "검색 성공.",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = FollowingResponseDto .class)))),
+        @ApiResponse(
+            responseCode = "404",
+            description = "유저를 찾을 수 없습니다.",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        )
+    })
+    @GetMapping("/search/following")
+    public ResponseEntity<List<FollowingResponseDto>> searchFollowing(
+        @RequestParam(required = false) String nickname,
+        @RequestParam Long myUserId,
+        @RequestParam Long targetUserId
+    ) {
+        List<FollowingResponseDto> responseDtoList = followService.searchFollowing(nickname, myUserId, targetUserId);
         return ResponseEntity.ok(responseDtoList);
     }
 
