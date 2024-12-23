@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FollowingRepository extends JpaRepository<Following, Long> {
+public interface FollowingRepository extends JpaRepository<Following, Long>, FollowingRepositoryCustom {
     Optional<Following> findByFollowerAndFollowing(User follower, User following);
 
     @Query("SELECT f FROM Following f JOIN fetch f.following WHERE f.follower =:user")

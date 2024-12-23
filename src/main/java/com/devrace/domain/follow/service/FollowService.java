@@ -174,6 +174,24 @@ public class FollowService {
             .toList();
     }
 
+    public List<FollowingResponseDto> searchFollowing(String nickname, Long myUserId, Long targetUserId) {
+        User targetUser = getUser(targetUserId);
+        User my = getUser(myUserId);
+
+        List<Following> followingList = followingRepository.searchFollowing(nickname, targetUser.getId());
+
+        return followingList.stream()
+            .map(following -> FollowingResponseDto.builder()
+                .id(following.getId())
+                .followingNickname(following.getFollowing().getNickname())
+                .imageUrl(following.getFollowing().getImageUrl())
+                .description(following.getFollowing().getDescription())
+                .isFollowing(checkFollowEachOther(my, following.getFollowing()))
+                .build())
+            .toList();
+    }
+
+
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
