@@ -1,13 +1,5 @@
 package com.devrace.domain.user.controller;
 
-import com.devrace.domain.user.controller.dto.request.BlogAddressUpdateRequest;
-import com.devrace.domain.user.controller.dto.request.DescriptionUpdateRequest;
-import com.devrace.domain.user.controller.dto.request.NicknameUpdateRequest;
-import com.devrace.domain.user.controller.dto.response.MyInfoResponse;
-import com.devrace.domain.user.controller.dto.response.UserInfoResponse;
-import com.devrace.domain.user.service.UserService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +8,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.devrace.domain.user.controller.dto.request.BlogAddressUpdateRequest;
+import com.devrace.domain.user.controller.dto.request.DescriptionUpdateRequest;
+import com.devrace.domain.user.controller.dto.request.NicknameUpdateRequest;
+import com.devrace.domain.user.controller.dto.response.LoginResponse;
+import com.devrace.domain.user.controller.dto.response.MyInfoResponse;
+import com.devrace.domain.user.controller.dto.response.UserInfoResponse;
+import com.devrace.domain.user.service.UserService;
+import com.devrace.global.config.oauth.provider.ProviderType;
+
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 
 @RestController
@@ -53,5 +58,20 @@ public class UserController {
     public ResponseEntity<Void> updateBlogAddress(@AuthenticationPrincipal Long userId, @RequestBody BlogAddressUpdateRequest request) {
         userService.updateBlogAddress(userId, request);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/google/callback")
+    public ResponseEntity<LoginResponse> googleLogin(@RequestParam String code, HttpServletResponse response) {
+        return ResponseEntity.ok(userService.login(ProviderType.GOOGLE, code, response));
+    }
+
+    @GetMapping("/kakao/callback")
+    public ResponseEntity<LoginResponse> kakaoLogin(@RequestParam String code, HttpServletResponse response) {
+        return ResponseEntity.ok(userService.login(ProviderType.KAKAO, code, response));
+    }
+
+    @GetMapping("/github/callback")
+    public ResponseEntity<LoginResponse> githubLogin(@RequestParam String code, HttpServletResponse response) {
+        return ResponseEntity.ok(userService.login(ProviderType.GITHUB, code, response));
     }
 }

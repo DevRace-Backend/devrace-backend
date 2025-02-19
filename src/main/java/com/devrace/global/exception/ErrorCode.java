@@ -7,6 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    /* COMMON_ERROR */
+    COMMON_BAD_REQUEST(400, "잘못된 요청입니다."),
 
     /*  400 BAD_REQUEST : 잘못된 요청  */
     DUPLICATED_LINK(400, "중복된 링크입니다."),
