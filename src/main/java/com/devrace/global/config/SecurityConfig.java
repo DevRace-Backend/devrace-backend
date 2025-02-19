@@ -40,7 +40,7 @@ public class SecurityConfig {
 			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(requests -> requests
-				.requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
+				.requestMatchers("/v3/**", "/swagger-ui/**", "/swagger").permitAll()
 				.requestMatchers("/api/v1/users/*/callback").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/v1/users/me", "/api/v1/users").permitAll()
 				.requestMatchers("/tokens").permitAll()
