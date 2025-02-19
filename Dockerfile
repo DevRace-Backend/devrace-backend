@@ -2,8 +2,6 @@ FROM openjdk:21-jdk
 
 ARG JAR_FILE=build/libs/*.jar
 
-ENV CUSTOM_NAME default
-
 COPY ${JAR_FILE} app.jar
 
 EXPOSE 8080
