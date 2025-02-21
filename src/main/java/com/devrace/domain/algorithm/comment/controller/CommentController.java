@@ -42,12 +42,7 @@ public class CommentController {
             @ApiResponse(
                     responseCode = "201",
                     description = "댓글을 작성하였습니다.",
-                    content = @Content(schema = @Schema(implementation = CreateCommentResponseDto.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "제출된 알고리즘 풀이를 찾을 수 없습니다. 또는 유저를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(schema = @Schema(implementation = CreateCommentResponseDto.class)))
     })
     @PostMapping("/{solutionId}")
     public ResponseEntity<CreateCommentResponseDto> createComment(
@@ -65,17 +60,18 @@ public class CommentController {
             @ApiResponse(
                     responseCode = "200",
                     description = "댓글을 수정하였습니다.",
-                    content = @Content(schema = @Schema(implementation = EditCommentResponseDto.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "댓글을 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "인증되지 않았습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(schema = @Schema(implementation = EditCommentResponseDto.class)))
+        // ,
+        //     @ApiResponse(
+        //             responseCode = "400",
+        //             description = "댓글을 찾을 수 없습니다.",
+        //             content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        //     ),
+        //     @ApiResponse(
+        //             responseCode = "401",
+        //             description = "인증되지 않았습니다.",
+        //             content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        //     )
     })
     @PatchMapping("/{commentId}")
     public ResponseEntity<EditCommentResponseDto> editComment(
@@ -93,17 +89,7 @@ public class CommentController {
             @ApiResponse(
                     responseCode = "200",
                     description = "댓글을 삭제하였습니다.",
-                    content = @Content),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "댓글을 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "인증되지 않았습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content)
     })
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
@@ -120,17 +106,7 @@ public class CommentController {
             @ApiResponse(
                     responseCode = "200",
                     description = "댓글 리스트 조회",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseDto.class)))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "유효하지 않은 페이지입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "페이지를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = CommentResponseDto.class))))
     })
     @GetMapping("{solutionId}")
     public ResponseEntity<List<CommentResponseDto>> getCommentList(

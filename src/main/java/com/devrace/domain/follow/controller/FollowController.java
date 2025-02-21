@@ -38,12 +38,7 @@ public class FollowController {
             @ApiResponse(
                     responseCode = "200",
                     description = "해당 유저를 팔로우하였습니다.",
-                    content = @Content(schema = @Schema(implementation = FollowingResponseDto.class))),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "유저를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(schema = @Schema(implementation = FollowingResponseDto.class)))
     })
     @PostMapping("/follow")
     public ResponseEntity<FollowingResponseDto> followUser(
@@ -58,12 +53,7 @@ public class FollowController {
             @ApiResponse(
                     responseCode = "204",
                     description = "해당 유저를 언팔로우하였습니다.",
-                    content = @Content),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "팔로우 관계를 찾을 수 없습니다. 또는 나를 팔로우 하는 유저를 찾을 수 없습니다. 또는 내가 팔로잉하는 유저를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content)
     })
     @DeleteMapping("/unfollow")
     public ResponseEntity<Void> unfollowUser(
@@ -78,17 +68,7 @@ public class FollowController {
             @ApiResponse(
                     responseCode = "200",
                     description = "팔로워 리스트를 조회하였습니다.",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = FollowerResponseDto.class)))),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "해당 유저의 팔로워 리스트는 비공개입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "유저를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = FollowerResponseDto.class))))
     })
     @GetMapping("/followers/{userId}")
     public ResponseEntity<List<FollowerResponseDto>> getFollowerList(
@@ -104,17 +84,7 @@ public class FollowController {
             @ApiResponse(
                     responseCode = "200",
                     description = "팔로잉 리스트를 조회하였습니다.",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = FollowingResponseDto.class)))),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "해당 유저의 팔로잉 리스트는 비공개입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "유저를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = FollowingResponseDto.class))))
     })
     @GetMapping("/following/{userId}")
     public ResponseEntity<List<FollowingResponseDto>> getFollowingList(
@@ -130,12 +100,7 @@ public class FollowController {
         @ApiResponse(
             responseCode = "200",
             description = "검색 성공.",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = FollowerResponseDto.class)))),
-        @ApiResponse(
-            responseCode = "404",
-            description = "유저를 찾을 수 없습니다.",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        )
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = FollowerResponseDto.class))))
     })
     @GetMapping("/search/follower")
     public ResponseEntity<List<FollowerResponseDto>> searchFollower(
@@ -152,12 +117,7 @@ public class FollowController {
         @ApiResponse(
             responseCode = "200",
             description = "검색 성공.",
-            content = @Content(array = @ArraySchema(schema = @Schema(implementation = FollowingResponseDto .class)))),
-        @ApiResponse(
-            responseCode = "404",
-            description = "유저를 찾을 수 없습니다.",
-            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-        )
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = FollowingResponseDto .class))))
     })
     @GetMapping("/search/following")
     public ResponseEntity<List<FollowingResponseDto>> searchFollowing(

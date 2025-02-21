@@ -38,17 +38,7 @@ public class AlgorithmController {
             @ApiResponse(
                     responseCode = "201",
                     description = "알고리즘을 제출하였습니다.",
-                    content = @Content(schema = @Schema(implementation = SubmitAlgorithmResponseDto.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "잘못된 링크입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "유저를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(schema = @Schema(implementation = SubmitAlgorithmResponseDto.class)))
     })
     @PostMapping
     public ResponseEntity<SubmitAlgorithmResponseDto> submitAlgorithm(
@@ -65,17 +55,7 @@ public class AlgorithmController {
             @ApiResponse(
                     responseCode = "200",
                     description = "알고리즘 제출 수정이 완료되었습니다.",
-                    content = @Content(schema = @Schema(implementation = EditAlgorithmResponseDto.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "잘못된 링크입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "유저를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(schema = @Schema(implementation = EditAlgorithmResponseDto.class)))
     })
     @PatchMapping("/edit/{solutionId}")
     public ResponseEntity<EditAlgorithmResponseDto> editAlgorithm(
@@ -93,17 +73,7 @@ public class AlgorithmController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "204",
-                    description = "No Content"),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "권한이 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "유저를 찾을 수 없습니다. 또는 제출된 알고리즘 풀이를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    description = "No Content")
     })
     @PatchMapping("/edit/{solutionId}/visible")
     public ResponseEntity<Void> changeSolutionVisibility(
@@ -120,13 +90,7 @@ public class AlgorithmController {
             @ApiResponse(
                     responseCode = "200",
                     description = "알고리즘 조회에 성공하였습니다.",
-                    content = @Content(schema = @Schema(implementation = AlgorithmResponseDto.class))),
-
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "유저를 찾을 수 없습니다. 또는 제출된 알고리즘 풀이를 찾을 수 없습니다. 또는 알고리즘 문제를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(schema = @Schema(implementation = AlgorithmResponseDto.class)))
     })
     @GetMapping("/{solutionId}")
     public ResponseEntity<AlgorithmResponseDto> getAlgorithm(

@@ -42,17 +42,7 @@ public class LogController {
             @ApiResponse(
                     responseCode = "201",
                     description = "개발일지(로그)를 제출하였습니다.",
-                    content = @Content(schema = @Schema(implementation = SubmitLogResponseDto.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "중복된 링크입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "유저를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(schema = @Schema(implementation = SubmitLogResponseDto.class)))
     })
     @PostMapping
     public ResponseEntity<SubmitLogResponseDto> submitLog(
@@ -79,17 +69,7 @@ public class LogController {
             @ApiResponse(
                     responseCode = "200",
                     description = "개발일지(로그)를 수정하였습니다.",
-                    content = @Content(schema = @Schema(implementation = SubmitLogResponseDto.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "중복된 링크입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "유저를 찾을 수 없습니다. 또는 로그를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(schema = @Schema(implementation = SubmitLogResponseDto.class)))
     })
     @PatchMapping("/edit/{logId}")
     public ResponseEntity<EditLogResponseDto> editLog(
@@ -126,17 +106,7 @@ public class LogController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "204",
-                    description = "No Content"),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "권한이 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "유저를 찾을 수 없습니다. 또는 로그를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    description = "No Content")
     })
     @PatchMapping("/edit/{logId}/visible")
     public ResponseEntity<Void> changeLogVisibility(
@@ -152,17 +122,7 @@ public class LogController {
             @ApiResponse(
                     responseCode = "200",
                     description = "개발일지(로그)를 조회하였습니다.",
-                    content = @Content(schema = @Schema(implementation = LogResponseDto.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "중복된 링크입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "로그를 찾을 수 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+                    content = @Content(schema = @Schema(implementation = LogResponseDto.class)))
     })
     @GetMapping("/{logId}")
     public ResponseEntity<LogResponseDto> getLog(
